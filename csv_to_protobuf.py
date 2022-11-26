@@ -1,3 +1,4 @@
+import math
 import argparse
 import csv
 import glob
@@ -81,6 +82,7 @@ def create_track_groups(track_type, folder, class_names, label_type):
             class_count = dict()
             for i_row, (is_last,row) in enumerate(isLast(csvreader)):
                 surgical_entities = []
+                annotator_name = row[1].replace(' ','') + row[2].replace(' ','')
                 if i_row == 0:
                     continue
 
@@ -135,9 +137,8 @@ def create_track_groups(track_type, folder, class_names, label_type):
                             protobuf_interval = sages_pb2.TemporalInterval(
                                 start=protobuf_start_time, end=protobuf_end_time, start_exact=True, end_exact=True
                             )
-
                             new_event = sages_pb2.Event(
-                                type=label, temporal_interval=protobuf_interval, video_id=video_id, annotator_id=row[0]+'_'+row[1]
+                                type=label, temporal_interval=protobuf_interval, video_id=video_id, annotator_id=annotator_name
                             )
                             new_entity = sages_pb2.SurgeryEntity(event=new_event, entity_id=new_id)
 
@@ -151,8 +152,9 @@ def create_track_groups(track_type, folder, class_names, label_type):
                     surgical_entities.sort(key=lambda x:x.event.temporal_interval.start.ToSeconds())
                     track = sages_pb2.Track(name=track_type, entities=surgical_entities)
                     tg = sages_pb2.TracksGroup(name=track_type + "_group", tracks=[track])
-                    print(video_filename)
-                    results_dict[video_filename] = tg
+
+                    video_filename_full = video_filename+'_'+annotator_name if annotator_name != '' else video_filename
+                    results_dict[video_filename_full] = tg
 
     print(str(labels_set))
     print(len(str(labels_set).split(',')))
@@ -308,8 +310,7 @@ if __name__ == "__main__":
     annotation_set_dicts = {}
     dataset_folder = params["dataset_folder"]
     class_names = load_class_names(dataset_folder)
-    print(class_names.keys())
-    for track_name in class_names.keys():
+    for track_name in class_names:
     # for track_name in class_names['phase']:
         track_dicts = create_track_groups(track_type=track_name,
                                           folder=dataset_folder,
@@ -320,8 +321,6 @@ if __name__ == "__main__":
             if key not in annotation_set_dicts:
                 annotation_set_dicts[key] = []
             annotation_set_dicts[key].append(track_dicts[key])
-    print(annotation_set_dicts)
- 
 
     if False:
         for key in annotation_set_dicts:
@@ -329,18 +328,80 @@ if __name__ == "__main__":
             folder_name = os.path.expandvars(os.path.expanduser(params['output']))
             os.makedirs(folder_name, exist_ok=True)
             
-            annotator_name = 'test'
-            output_pathname = os.path.join(folder_name,key + '_{}.pb'.format(annotator_name))
+            # annotator_name = 'test'
+            # output_pathname = os.path.join(folder_name,key + '_{}.pb'.format(annotator_name))
+            output_pathname = os.path.join(folder_name,key + '.pb')
             with open(output_pathname,'wb') as fp:
                 fp.write(annotation_set.SerializeToString())
                 fp.close()
 
-    if False:
+    if True:
         # Reading from pb files
         # print(load_protobuf_file('outputs/LC39.pb'))
         class_names,annotations = load_protobuf_dir('outputs')
-        print('Class Names',class_names)
-        print('Annotation',annotations.keys())
-        print('\n',annotations['LC39'],'\n')
-        print('\n',annotations['LC147'],'\n')
-        print('\n',annotations['LC185'],'\n')
+        for annotation_name in annotations.keys():
+            print('\n',annotations[annotation_name],'\n')
+        '''
+        print('\n',annotations['LC39_PoppyAddison'],'\n')
+        print('\n',annotations['LC39_MateoVargas'],'\n')
+        print('\n',annotations['LC39_BrendanBrady'],'\n')
+        '''
+    
+    fps = 1.0
+    if True:
+        all_keys = [key.split('_')[0] for key in annotations.keys()]
+        all_annotators = [key.split('_')[1] for key in annotations.keys()]
+
+        unique_keys = [*set(all_keys)]
+        unique_annotators = [*set(all_annotators)]
+
+        A = list()
+        scores = dict()
+        # class_names['phase'].insert(0,'EMPTY')
+        print(class_names)
+
+        for key_i,key in enumerate(unique_keys):
+            A.append([])
+            for annotator in unique_annotators:
+                max_size = 1911     # TODO: Max size
+                ann_dict = annotations[key+'_'+annotator]
+                ann_arr = np.zeros(max_size)
+                # ann_arr = np.full(max_size,-1)
+                for phase in class_names['phase']:
+                    if phase in ann_dict:
+                        start = math.floor(ann_dict[phase]['start'])
+                        end = math.floor(ann_dict[phase]['end'])
+                        for i in range(start,end+1):
+                            ann_arr[i] = (class_names['phase'].index(phase))+1
+                '''
+                if len(A[key])>0:
+                   for prev in A[key]:
+                       # Compute inter-annotator agreement
+                       score = ...
+                       scores[key].append(score)
+                '''
+                A[key_i].append(ann_arr)
+        np.set_printoptions(threshold=np.inf)
+        A = np.array(A)
+
+        from itertools import combinations
+        from inter_annotate import cohen_kappa_score
+        # for key in range(A.shape[0]):
+
+        print('key',unique_keys[0])
+        Z = list(combinations(range(A.shape[1]),2))
+        for pair in Z:
+            first = A[0][pair[0]]
+            second = A[0][pair[1]]
+            num_classes = len(class_names['phase'])+1
+            score = cohen_kappa_score(first,second,num_classes+1)
+            print(score)
+
+        # print(A['LC39'])
+
+       # sang gao cha shiu ho guo sang lei
+
+
+        # Testing phase pbs
+        # for annotator in 
+        # for class_name in class_names:

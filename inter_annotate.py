@@ -5,6 +5,15 @@ import torch
 import torchmetrics
 from torchmetrics.classification import MulticlassCohenKappa
 
+def cohen_kappa_score(y1,y2,num_classes):
+    target = torch.tensor(y1)
+    preds = torch.tensor(y2)
+    cohenkappa = MulticlassCohenKappa(num_classes=num_classes)
+    score = cohenkappa(target,preds)
+    score = cohenkappa(preds,target)
+    return score
+
+
 '''
 def cohen_kappa_score(y1,y2):
     # SKLearn
