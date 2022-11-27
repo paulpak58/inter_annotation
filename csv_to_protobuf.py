@@ -11,20 +11,7 @@ import sages_pb2
 from sages_pb2 import *
 import multidict
 import google.protobuf.timestamp_pb2
-
-def parse_args():
-    """Parse arguments
-
-    Returns:
-        params: arguments object
-    """
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=str, help="The output filename")
-    parser.add_argument("--dataset-folder", type=str, default=None, help="The location of the dataset files")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose flag")
-    params = parser.parse_args()
-    return params
-
+from inter_annotate import cohen_kappa_score
 
 def seconds_to_timestamp(seconds):
     """Convert seconds to a protobuf timestamp.
@@ -71,8 +58,8 @@ def create_track_groups(track_type, folder, class_names, label_type):
     labels_list = list()
     invalid_symbols = ['N/A', 'NA', '']
     for filename in txt_files:
-        if params["verbose"]:
-            print("annotation filename: {}".format(filename))
+        # if params["verbose"]:
+            # print("annotation filename: {}".format(filename))
         with open(filename, "r") as fp:
             csvreader = csv.reader(fp, delimiter=",")
             segments_status={}
@@ -302,106 +289,45 @@ def load_protobuf_file(filename):
                     all_entities.append({"track_name": tr.name, "entity": entity})
     return all_entities
 
+def write_files(annotation_set_dicts,params):
+    for key in annotation_set_dicts:
+        annotation_set = sages_pb2.AnnotationSet(tracks_groups=annotation_set_dicts[key])
+        folder_name = os.path.expandvars(os.path.expanduser(params['output']))
+        os.makedirs(folder_name, exist_ok=True)
+        output_pathname = os.path.join(folder_name,key + '.pb')
+        with open(output_pathname,'wb') as fp:
+            fp.write(annotation_set.SerializeToString())
+            fp.close()
 
-
-if __name__ == "__main__":
-    args = parse_args()
-    params = vars(args)
-    annotation_set_dicts = {}
-    dataset_folder = params["dataset_folder"]
-    class_names = load_class_names(dataset_folder)
-    for track_name in class_names:
-    # for track_name in class_names['phase']:
-        track_dicts = create_track_groups(track_type=track_name,
-                                          folder=dataset_folder,
-                                          # class_names = class_names['phase'],
-                                          class_names = class_names,
-                                          label_type='label_name')
-        for key in track_dicts:
-            if key not in annotation_set_dicts:
-                annotation_set_dicts[key] = []
-            annotation_set_dicts[key].append(track_dicts[key])
-
-    if False:
-        for key in annotation_set_dicts:
-            annotation_set = sages_pb2.AnnotationSet(tracks_groups=annotation_set_dicts[key])
-            folder_name = os.path.expandvars(os.path.expanduser(params['output']))
-            os.makedirs(folder_name, exist_ok=True)
-            
-            # annotator_name = 'test'
-            # output_pathname = os.path.join(folder_name,key + '_{}.pb'.format(annotator_name))
-            output_pathname = os.path.join(folder_name,key + '.pb')
-            with open(output_pathname,'wb') as fp:
-                fp.write(annotation_set.SerializeToString())
-                fp.close()
-
-    if True:
-        # Reading from pb files
-        # print(load_protobuf_file('outputs/LC39.pb'))
-        class_names,annotations = load_protobuf_dir('outputs')
-        for annotation_name in annotations.keys():
-            print('\n',annotations[annotation_name],'\n')
-        '''
-        print('\n',annotations['LC39_PoppyAddison'],'\n')
-        print('\n',annotations['LC39_MateoVargas'],'\n')
-        print('\n',annotations['LC39_BrendanBrady'],'\n')
-        '''
-    
+def retrieve_annotator_classifications(class_names,annotations):
     fps = 1.0
-    if True:
-        all_keys = [key.split('_')[0] for key in annotations.keys()]
-        all_annotators = [key.split('_')[1] for key in annotations.keys()]
+    all_keys = [key.split('_')[0] for key in annotations.keys()]
+    all_annotators = [key.split('_')[1] for key in annotations.keys()]
+    unique_keys = [*set(all_keys)]
+    unique_annotators = [*set(all_annotators)]
+    max_vid_lens = dict()
+    for key in unique_keys:
+        max_vid_len = 0
+        for annotator in unique_annotators:
+            for phase in class_names['phase']:
+                if phase in annotations[key+'_'+annotator]:
+                    max_vid_len = max(max_vid_len,((annotations[key+'_'+annotator])[phase])['end'])
+        max_vid_lens[key] = int(max_vid_len)+1
 
-        unique_keys = [*set(all_keys)]
-        unique_annotators = [*set(all_annotators)]
-
-        A = list()
-        scores = dict()
-        # class_names['phase'].insert(0,'EMPTY')
-        print(class_names)
-
-        for key_i,key in enumerate(unique_keys):
-            A.append([])
-            for annotator in unique_annotators:
-                max_size = 1911     # TODO: Max size
-                ann_dict = annotations[key+'_'+annotator]
-                ann_arr = np.zeros(max_size)
-                # ann_arr = np.full(max_size,-1)
-                for phase in class_names['phase']:
-                    if phase in ann_dict:
-                        start = math.floor(ann_dict[phase]['start'])
-                        end = math.floor(ann_dict[phase]['end'])
-                        for i in range(start,end+1):
-                            ann_arr[i] = (class_names['phase'].index(phase))+1
-                '''
-                if len(A[key])>0:
-                   for prev in A[key]:
-                       # Compute inter-annotator agreement
-                       score = ...
-                       scores[key].append(score)
-                '''
-                A[key_i].append(ann_arr)
-        np.set_printoptions(threshold=np.inf)
-        A = np.array(A)
-
-        from itertools import combinations
-        from inter_annotate import cohen_kappa_score
-        # for key in range(A.shape[0]):
-
-        print('key',unique_keys[0])
-        Z = list(combinations(range(A.shape[1]),2))
-        for pair in Z:
-            first = A[0][pair[0]]
-            second = A[0][pair[1]]
-            num_classes = len(class_names['phase'])+1
-            score = cohen_kappa_score(first,second,num_classes+1)
-            print(score)
-
-        # print(A['LC39'])
-
-       # sang gao cha shiu ho guo sang lei
-
-
-        # Testing phase pbs
-        # for annotator in 
-        # for class_name in class_names:
+    A = dict()
+    scores = dict()
+    for key in unique_keys:
+        for annotator in unique_annotators:
+            max_size = max_vid_lens[key]
+            ann_dict = annotations[key+'_'+annotator]
+            ann_arr = np.zeros(max_size)
+            for phase in class_names['phase']:
+                if phase in ann_dict:
+                    start = math.floor(ann_dict[phase]['start'])
+                    end = math.floor(ann_dict[phase]['end'])
+                    for i in range(start,end+1):
+                        ann_arr[i] = (class_names['phase'].index(phase))+1
+            if key not in A:
+                A[key] = list()
+            A[key].append(ann_arr)
+    return unique_keys,unique_annotators,A
