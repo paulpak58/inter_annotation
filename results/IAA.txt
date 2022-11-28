@@ -1,0 +1,9 @@
+First annotator: PoppyAddison; Second annotator: MateoVargas
+--> Avg scores: 0.6561807990074158
+
+First annotator: PoppyAddison; Second annotator: BrendanBrady
+--> Avg scores: 0.6959607601165771
+
+First annotator: MateoVargas; Second annotator: BrendanBrady
+--> Avg scores: 0.5543316006660461
+
