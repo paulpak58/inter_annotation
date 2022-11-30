@@ -1,3 +1,4 @@
+import sys
 import math
 import argparse
 import csv
@@ -12,6 +13,7 @@ from sages_pb2 import *
 import multidict
 import google.protobuf.timestamp_pb2
 from inter_annotate import cohen_kappa_score
+from itertools import combinations,permutations
 
 def seconds_to_timestamp(seconds):
     """Convert seconds to a protobuf timestamp.
@@ -143,9 +145,9 @@ def create_track_groups(track_type, folder, class_names, label_type):
                     video_filename_full = video_filename+'_'+annotator_name if annotator_name != '' else video_filename
                     results_dict[video_filename_full] = tg
 
-    print(str(labels_set))
-    print(len(str(labels_set).split(',')))
-    print(class_count)
+    # print(str(labels_set))
+    # print(len(str(labels_set).split(',')))
+    # print(class_count)
     return results_dict
 
 
@@ -167,7 +169,7 @@ def load_class_names(dataset_folder = None):
     class_names = dict()
     folder_name = os.path.expandvars(os.path.expanduser(dataset_folder))
     csv_files = glob.glob(os.path.join(folder_name, "*.csv"))
-    print(f"load_class_names: Found {len(csv_files)} spreadsheet files in {dataset_folder}.")
+    #  print(f"load_class_names: Found {len(csv_files)} spreadsheet files in {dataset_folder}.")
 
     csv_anno = dict()
     for filename in csv_files:
@@ -299,35 +301,79 @@ def write_files(annotation_set_dicts,params):
             fp.write(annotation_set.SerializeToString())
             fp.close()
 
+def retrieve_true_values(class_names,unique_annotators):
+    #### Merge phase segments belonging to the same phase into one; In other words, we remove all digits from phase titles except if
+    #### the phase is a Checkpoint
+    true_phases = list()
+    for phase in class_names['phase']:
+        phase = phase if 'Checkpoint' in phase else (''.join(i for i in phase if not i.isdigit()))
+        if phase not in true_phases:
+            true_phases.append(phase)
+
+    ##### Ground truth annotator: Medical resident, Compute annotation scores against other non-residents
+    Z = list(combinations(unique_annotators,2))
+    true_pairs = list()
+    for pair in Z:
+        if 'Resident' in pair[0] or 'Resident' in pair[1]:
+            true_pairs.append(pair) if 'Resident' in pair[0] else true_pairs.append((pair[1],pair[0]))
+
+    return true_phases,true_pairs
+
 def retrieve_annotator_classifications(class_names,annotations):
     fps = 1.0
     all_keys = [key.split('_')[0] for key in annotations.keys()]
     all_annotators = [key.split('_')[1] for key in annotations.keys()]
     unique_keys = [*set(all_keys)]
     unique_annotators = [*set(all_annotators)]
+
+    true_phases, true_pairs = retrieve_true_values(class_names,unique_annotators)
+
+    #### FIND maximum time stamp to define the length for each video
     max_vid_lens = dict()
-    for key in unique_keys:
+    for video in unique_keys:
         max_vid_len = 0
         for annotator in unique_annotators:
             for phase in class_names['phase']:
-                if phase in annotations[key+'_'+annotator]:
-                    max_vid_len = max(max_vid_len,((annotations[key+'_'+annotator])[phase])['end'])
-        max_vid_lens[key] = int(max_vid_len)+1
+                if phase in annotations[video+'_'+annotator]:
+                    max_vid_len = int(max(max_vid_len,((annotations[video+'_'+annotator])[phase])['end']))
+        max_vid_lens[video] = max_vid_len+1
 
     A = dict()
-    scores = dict()
-    for key in unique_keys:
+    for video in unique_keys:
+        A[video] = dict()
         for annotator in unique_annotators:
-            max_size = max_vid_lens[key]
-            ann_dict = annotations[key+'_'+annotator]
+            max_size = max_vid_lens[video]
+            ann_dict = annotations[video+'_'+annotator]
             ann_arr = np.zeros(max_size)
             for phase in class_names['phase']:
                 if phase in ann_dict:
                     start = math.floor(ann_dict[phase]['start'])
                     end = math.floor(ann_dict[phase]['end'])
+                    phase = phase if 'Checkpoint' in phase else (''.join(i for i in phase if not i.isdigit()))
                     for i in range(start,end+1):
-                        ann_arr[i] = (class_names['phase'].index(phase))+1
-            if key not in A:
-                A[key] = list()
-            A[key].append(ann_arr)
-    return unique_keys,unique_annotators,A
+                        ann_arr[i] = true_phases.index(phase)+1
+            A[video][annotator] = ann_arr
+
+    #### SCORES Dict: Scores[video][annotator pair][phase] = IAA score for that phase
+    IAA = dict()
+    for video in unique_keys:
+        IAA[video] = dict()    
+        for annotator_pair in true_pairs:
+            first_annotator = annotator_pair[0]
+            second_annotator = annotator_pair[1]
+            
+            IAA[video][first_annotator+'_'+second_annotator] = list()
+            for _ in range(len(true_phases)+1):
+                IAA[video][first_annotator+'_'+second_annotator].append( (list(),list()) )
+
+            for t in range(max_vid_lens[video]):
+                first_phase_idx = int(A[video][first_annotator][t])
+                second_phase_idx = int(A[video][second_annotator][t])
+                if first_phase_idx!=0:
+                    IAA[video][first_annotator+'_'+second_annotator][first_phase_idx][0].append(first_phase_idx)
+                    IAA[video][first_annotator+'_'+second_annotator][first_phase_idx][1].append(second_phase_idx)
+                if second_phase_idx!=0 and second_phase_idx!=first_phase_idx:
+                    IAA[video][first_annotator+'_'+second_annotator][second_phase_idx][0].append(first_phase_idx)
+                    IAA[video][first_annotator+'_'+second_annotator][second_phase_idx][1].append(second_phase_idx)
+    
+    return unique_keys,true_pairs,true_phases,IAA
