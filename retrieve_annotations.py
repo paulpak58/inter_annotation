@@ -12,7 +12,7 @@ import sages_pb2
 from sages_pb2 import *
 import multidict
 import google.protobuf.timestamp_pb2
-from inter_annotate import cohen_kappa_score
+from inter_annotate import cohen_kappa_score,cohen_kappa
 from itertools import combinations,permutations
 
 def seconds_to_timestamp(seconds):
@@ -338,42 +338,69 @@ def retrieve_annotator_classifications(class_names,annotations):
                     max_vid_len = int(max(max_vid_len,((annotations[video+'_'+annotator])[phase])['end']))
         max_vid_lens[video] = max_vid_len+1
 
+    annotations_true_phase = dict()
+    for video in unique_keys:
+        for annotator in unique_annotators:
+            annotations_true_phase[video+'_'+annotator] = dict()
+
+            for phase in class_names['phase']:
+                if phase in annotations[video+'_'+annotator]:
+
+                    true_phase = phase if 'Checkpoint' in phase else (''.join(i for i in phase if not i.isdigit()))
+                    if true_phase not in annotations_true_phase[video+'_'+annotator].keys():
+                        annotations_true_phase[video+'_'+annotator][true_phase] = dict()
+                        annotations_true_phase[video+'_'+annotator][true_phase]['start'] = annotations[video+'_'+annotator][phase]['start']
+                        annotations_true_phase[video+'_'+annotator][true_phase]['end'] = annotations[video+'_'+annotator][phase]['end']
+                    else:
+                        prev_start = annotations_true_phase[video+'_'+annotator][true_phase]['start']
+                        prev_end = annotations_true_phase[video+'_'+annotator][true_phase]['end']
+                        
+                        annotations_true_phase[video+'_'+annotator][true_phase]['start'] = min(annotations[video+'_'+annotator][phase]['start'],prev_start)
+                        annotations_true_phase[video+'_'+annotator][true_phase]['end'] = max(annotations[video+'_'+annotator][phase]['end'],prev_end)
+
+
+    
     A = dict()
     for video in unique_keys:
         A[video] = dict()
-        for annotator in unique_annotators:
-            max_size = max_vid_lens[video]
-            ann_dict = annotations[video+'_'+annotator]
-            ann_arr = np.zeros(max_size)
-            for phase in class_names['phase']:
-                if phase in ann_dict:
-                    start = math.floor(ann_dict[phase]['start'])
-                    end = math.floor(ann_dict[phase]['end'])
-                    phase = phase if 'Checkpoint' in phase else (''.join(i for i in phase if not i.isdigit()))
-                    for i in range(start,end+1):
-                        ann_arr[i] = true_phases.index(phase)+1
-            A[video][annotator] = ann_arr
-
-    #### SCORES Dict: Scores[video][annotator pair][phase] = IAA score for that phase
-    IAA = dict()
-    for video in unique_keys:
-        IAA[video] = dict()    
         for annotator_pair in true_pairs:
             first_annotator = annotator_pair[0]
             second_annotator = annotator_pair[1]
-            
-            IAA[video][first_annotator+'_'+second_annotator] = list()
-            for _ in range(len(true_phases)+1):
-                IAA[video][first_annotator+'_'+second_annotator].append( (list(),list()) )
+           
+            ann_dict_first = annotations_true_phase[video+'_'+first_annotator]
+            ann_dict_second = annotations_true_phase[video+'_'+second_annotator]
+            A[video][first_annotator+'_'+second_annotator] = dict() 
+            # for phase in class_names['phase']:
+            for phase in true_phases:
+                if phase in ann_dict_first and phase in ann_dict_second:
+                    start_first = math.floor(ann_dict_first[phase]['start'])
+                    end_first = math.floor(ann_dict_first[phase]['end'])
+                    start_second = math.floor(ann_dict_second[phase]['start'])
+                    end_second = math.floor(ann_dict_second[phase]['end'])
 
-            for t in range(max_vid_lens[video]):
-                first_phase_idx = int(A[video][first_annotator][t])
-                second_phase_idx = int(A[video][second_annotator][t])
-                if first_phase_idx!=0:
-                    IAA[video][first_annotator+'_'+second_annotator][first_phase_idx][0].append(first_phase_idx)
-                    IAA[video][first_annotator+'_'+second_annotator][first_phase_idx][1].append(second_phase_idx)
-                if second_phase_idx!=0 and second_phase_idx!=first_phase_idx:
-                    IAA[video][first_annotator+'_'+second_annotator][second_phase_idx][0].append(first_phase_idx)
-                    IAA[video][first_annotator+'_'+second_annotator][second_phase_idx][1].append(second_phase_idx)
-    
-    return unique_keys,true_pairs,true_phases,IAA
+                    MIN_START = min(start_first,start_second)
+                    MAX_END = max(end_first,end_second)
+                    phase_arr_first = np.zeros((MAX_END-MIN_START)+1)
+                    phase_arr_second = np.zeros((MAX_END-MIN_START)+1)
+
+                    for i in range(len(phase_arr_first)):
+                        if start_first<=(i+MIN_START) and end_first>=(i+MIN_START):
+                            phase_arr_first[i] = 1.
+                        if start_second<=(i+MIN_START) and end_second>=(i+MIN_START):
+                            phase_arr_second[i] = 1.
+                    '''
+                    if video=='LC147' and first_annotator=='Resident1' and second_annotator=='Layperson2' and phase=='Port Placement ':
+                        print('first',phase_arr_first)
+                        print('second',phase_arr_second)
+                    '''
+                    # Compute IAA Score 
+                    score = cohen_kappa(phase_arr_first,phase_arr_second)*-1
+                    # score = cohen_kappa_score(phase_arr_second,phase_arr_first,num_classes=2).item()*-1
+                    A[video][first_annotator+'_'+second_annotator][phase] = score
+                    # print(score)
+
+    #### FLEISS SCORE: Compute for Medical Residents and Non-residents
+    IAA = A
+
+    FLEISS_IAA = dict()
+    return unique_keys,true_pairs,true_phases,IAA,FLEISS_IAA

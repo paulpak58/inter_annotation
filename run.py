@@ -69,59 +69,14 @@ if __name__ == "__main__":
             row['User Pair'] = first_annotator+','+second_annotator
             row[''] = ''
 
-            total_first_annotation_video = list()
-            total_second_annotation_video = list()
-            for phase_idx,phase in enumerate(true_phases):
-                phase_idx = phase_idx + 1 
-                if IAA[video][first_annotator+'_'+second_annotator][phase_idx]:     # list not empty
-                    first_annotation_arr = IAA[video][first_annotator+'_'+second_annotator][phase_idx][0]
-                    second_annotation_arr = IAA[video][first_annotator+'_'+second_annotator][phase_idx][1]
-                    if len(first_annotation_arr)!=0:
-                        score = cohen_kappa(first_annotation_arr,second_annotation_arr)
-                        row[phase] = score
-                    else:
-                        row[phase] = 0
-
-                    total_first_annotation_video += first_annotation_arr
-                    total_second_annotation_video += second_annotation_arr
-            total_score = cohen_kappa(total_first_annotation_video,total_second_annotation_video)
-            # row['Total Cohen IAA'] = total_score
-            rows.append(row)
-
-    '''
-    # Compute Total Averages
-    avg_row = list()
-    for annotator_pair in true_pairs:
-        row['Video name'] = 'Average'
-        first_annotator = annotator_pair[0]
-        second_annotator = annotator_pair[1]
-        row['User Pair'] = first_annotator+','+second_annotator
-        row[''] = ''
-        for video in unique_keys():
             for phase in true_phases:
-    '''
+                if phase in IAA[video][first_annotator+'_'+second_annotator].keys():
+                    row[phase] = IAA[video][first_annotator+'_'+second_annotator][phase]
+                else:
+                    row[phase] = 0
+            rows.append(row)
 
     with open(output_fn_cohen,'w') as f:
         writer = csv.DictWriter(f,fieldnames=header)
         writer.writeheader()
         writer.writerows(rows)
-
-    '''
-    header = ['Video name','User Group','']
-    for phase in true_phases:
-        header.append(phase)
-    header.append('Total Cohen IAA')
-    
-    rows = list()
-    for video in unique_keys:
-        M = FLEISS_IAA[video]
-        M = np.array(M)
-        print(M[:,1:].shape)
-        score = fleiss_kappa(M[:,1:])
-        score2 = fleiss_kappa(M)
-        print('Score 1: ',score,' Score 2: ',score2)
-    with open(output_fn_fleiss,'w') as f:
-        writer = csv.DictWriter(f,fieldnames=header)
-        writer.writeheader()
-        writer.writerows(rows)
-    '''

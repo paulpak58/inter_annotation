@@ -4,6 +4,7 @@ import sklearn
 import torch
 import torchmetrics
 from torchmetrics.classification import MulticlassCohenKappa
+import ipdb;
 
 def cohen_kappa_score(y1,y2,num_classes):
     target = torch.tensor(y1)
@@ -20,6 +21,7 @@ def cohen_kappa(y1,y2):
 
     Modified from: https://towardsdatascience.com/inter-annotator-agreement-2f46c6d37bf3
     '''
+    # ipdb.set_trace()
     count = 0
     for an1,an2 in zip(y1,y2):
         if an1==an2:
@@ -43,6 +45,7 @@ def fleiss_kappa(M):
 
     Modified from: https://towardsdatascience.com/inter-annotator-agreement-2f46c6d37bf3
     '''
+    M = np.array(M)
     N,k = M.shape
     num_annotators = float(np.sum(M[0,:]))
     total_annotations = N*num_annotators
