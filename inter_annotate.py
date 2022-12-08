@@ -23,6 +23,8 @@ def cohen_kappa(y1,y2):
     '''
     # ipdb.set_trace()
     count = 0
+    y1 = y1.tolist()
+    y2 = y2.tolist()
     for an1,an2 in zip(y1,y2):
         if an1==an2:
             count+=1
@@ -30,12 +32,12 @@ def cohen_kappa(y1,y2):
     unique = set(y1+y2)
     E = 0                                   # expected agreement
     for item in unique:
-        count1 = np.count_nonzero(y1==item)
-        count2 = np.count_nonzero(y2==item)
+        count1 = y1.count(item)
+        count2 = y2.count(item)
         count = ((count1/len(y1))*(count2/len(y2)))
         E += count
 
-    return round((A-E)/(1-E),4)
+    return round((A-E)/(1-E+1e-4),4)
 
 
 def fleiss_kappa(M):

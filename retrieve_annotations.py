@@ -380,21 +380,14 @@ def retrieve_annotator_classifications(class_names,annotations):
 
                     MIN_START = min(start_first,start_second)
                     MAX_END = max(end_first,end_second)
-                    # phase_arr_first = np.zeros((MAX_END-MIN_START)+1)
-                    # phase_arr_second = np.zeros((MAX_END-MIN_START)+1)
-                    phase_arr_first = np.ones((MAX_END-MIN_START)+1)
-                    phase_arr_second = np.ones((MAX_END-MIN_START)+1)
+                    phase_arr_first = np.zeros((MAX_END-MIN_START)+1)
+                    phase_arr_second = np.zeros((MAX_END-MIN_START)+1)
 
                     for i in range(len(phase_arr_first)):
                         if start_first<=(i+MIN_START) and end_first>=(i+MIN_START):
-                            phase_arr_first[i] = 2.
+                            phase_arr_first[i] = 1.
                         if start_second<=(i+MIN_START) and end_second>=(i+MIN_START):
-                            phase_arr_second[i] = 2.
-                    '''
-                    if video=='LC147' and first_annotator=='Resident1' and second_annotator=='Layperson3' and phase=="Dissection of Calot's Triangle ":
-                        print('first',phase_arr_first)
-                        print('second',phase_arr_second)
-                    '''
+                            phase_arr_second[i] = 1.
                     # Compute IAA Score 
                     score = cohen_kappa(phase_arr_first,phase_arr_second)
                     # score = cohen_kappa_score(phase_arr_second,phase_arr_first,num_classes=2).item()*-1
