@@ -12,7 +12,7 @@ import sages_pb2
 from sages_pb2 import *
 import multidict
 import google.protobuf.timestamp_pb2
-from inter_annotate import cohen_kappa_score,cohen_kappa
+from inter_annotate import cohen_kappa_score, cohen_kappa, jaccard_index
 from itertools import combinations,permutations
 
 def seconds_to_timestamp(seconds):
@@ -71,7 +71,7 @@ def create_track_groups(track_type, folder, class_names, label_type):
             class_count = dict()
             for i_row, (is_last,row) in enumerate(isLast(csvreader)):
                 surgical_entities = []
-                annotator_name = row[1].replace(' ','') + row[2].replace(' ','')
+                annotator_name = row[1].replace(' ','')
                 if i_row == 0:
                     continue
 
@@ -83,7 +83,7 @@ def create_track_groups(track_type, folder, class_names, label_type):
 
                 else:
 
-                    for i_column in range(1, len(row)-1):
+                    for i_column in range(2, len(row)-1):
                         row_id = i_row
                         video_filename = row[0].replace(' ', '')
                         video_id= video_filename
@@ -92,7 +92,7 @@ def create_track_groups(track_type, folder, class_names, label_type):
                             continue
 
                         if (row[i_column].replace(' ', '') not in invalid_symbols and row[i_column+1].replace(' ', '') not in invalid_symbols) and 'Start' in row_name[i_column]:
-                            row_label = row_name[i_column].split(' Start')[0].split(' End')[0] 
+                            row_label = row_name[i_column].split(' Start')[0].split(' End')[0].strip()
                             
                             start_time = (datetime.datetime.strptime(row[i_column].replace(' ', ''), "%H:%M:%S") - datetime.datetime(1900, 1, 1)).total_seconds()
                             end_time = (datetime.datetime.strptime(row[i_column+1].replace(' ', ''), "%H:%M:%S") - datetime.datetime(1900, 1, 1)).total_seconds()
@@ -143,6 +143,8 @@ def create_track_groups(track_type, folder, class_names, label_type):
                     tg = sages_pb2.TracksGroup(name=track_type + "_group", tracks=[track])
 
                     video_filename_full = video_filename+'_'+annotator_name if annotator_name != '' else video_filename
+                    if video_filename_full == '':
+                        continue
                     results_dict[video_filename_full] = tg
 
     # print(str(labels_set))
@@ -158,9 +160,9 @@ def load_csv(filename=None):
         video_name = os.path.splitext(next(csv_data)[0])[0]
         for i_row, row in enumerate(csv_data):
             if i_row == 0:
-                for i_column, column in enumerate(row[3:]):
+                for i_column, column in enumerate(row[2:]):
                     if 'Start' in column or 'End' in column:
-                        anno_name = column.split('.')[-1].split(' Start')[0].split(' End')[0].replace(' ', '')
+                        anno_name = column.split('.')[-1].split(' Start')[0].split(' End')[0].replace(' ', '').strip()
                         anno_label = 1.0
                         anno[anno_name] = anno_label
     return anno
@@ -309,14 +311,19 @@ def retrieve_true_values(class_names,unique_annotators):
         phase = phase if 'Checkpoint' in phase else (''.join(i for i in phase if not i.isdigit()))
         if phase not in true_phases:
             true_phases.append(phase)
+    true_phases = ['Port Placement', 'Fundus Retraction', 'Release of Gallbladder Peritoneum', "Dissection of Calot's Triangle",
+                   'Checkpoint 1',  'Clipping Cystic Artery', 'Clipping Cystic Duct', 
+                   'Division Cystic Artery', 'Division Cystic Duct', 'Checkpoint 2',
+                   'Removal of Gallbladder from Liver Bed', 'Bagging of Gallbladder']
 
     ##### Ground truth annotator: Medical resident, Compute annotation scores against other non-residents
     Z = list(combinations(unique_annotators,2))
     true_pairs = list()
     for pair in Z:
-        if 'Resident' in pair[0] or 'Resident' in pair[1]:
-            true_pairs.append(pair) if 'Resident' in pair[0] else true_pairs.append((pair[1],pair[0]))
+        if 'Resident1' in pair[0] or 'Resident1' in pair[1]:
+            true_pairs.append(pair) if 'Resident1' in pair[0] else true_pairs.append((pair[1], pair[0]))
 
+    true_pairs.sort()
     return true_phases,true_pairs
 
 def retrieve_annotator_classifications(class_names,annotations):
@@ -325,9 +332,7 @@ def retrieve_annotator_classifications(class_names,annotations):
     all_annotators = [key.split('_')[1] for key in annotations.keys()]
     unique_keys = [*set(all_keys)]
     unique_annotators = [*set(all_annotators)]
-
     true_phases, true_pairs = retrieve_true_values(class_names,unique_annotators)
-
     #### FIND maximum time stamp to define the length for each video
     max_vid_lens = dict()
     for video in unique_keys:
@@ -346,7 +351,7 @@ def retrieve_annotator_classifications(class_names,annotations):
             for phase in class_names['phase']:
                 if phase in annotations[video+'_'+annotator]:
 
-                    true_phase = phase if 'Checkpoint' in phase else (''.join(i for i in phase if not i.isdigit()))
+                    true_phase = phase if 'Checkpoint' in phase else (''.join(i for i in phase if not i.isdigit())).strip()
                     if true_phase not in annotations_true_phase[video+'_'+annotator].keys():
                         annotations_true_phase[video+'_'+annotator][true_phase] = dict()
                         annotations_true_phase[video+'_'+annotator][true_phase]['start'] = annotations[video+'_'+annotator][phase]['start']
@@ -361,12 +366,12 @@ def retrieve_annotator_classifications(class_names,annotations):
 
     
     A = dict()
+    error_list = list()
     for video in unique_keys:
         A[video] = dict()
         for annotator_pair in true_pairs:
             first_annotator = annotator_pair[0]
             second_annotator = annotator_pair[1]
-           
             ann_dict_first = annotations_true_phase[video+'_'+first_annotator]
             ann_dict_second = annotations_true_phase[video+'_'+second_annotator]
             A[video][first_annotator+'_'+second_annotator] = dict() 
@@ -389,13 +394,41 @@ def retrieve_annotator_classifications(class_names,annotations):
                         if start_second<=(i+MIN_START) and end_second>=(i+MIN_START):
                             phase_arr_second[i] = 1.
                     # Compute IAA Score 
-                    score = cohen_kappa(phase_arr_first,phase_arr_second)
+                    score = jaccard_index(phase_arr_first,phase_arr_second)
                     # score = cohen_kappa_score(phase_arr_second,phase_arr_first,num_classes=2).item()*-1
                     A[video][first_annotator+'_'+second_annotator][phase] = score
                     # print(score)
+            
+            # overall cohen kappa per video 
+            phase_arr_first = np.zeros(max_vid_lens[video])
+            phase_arr_second = np.zeros(max_vid_lens[video])
+            for i in range(max_vid_lens[video]):
+                for phase in true_phases:
+                    if phase in ann_dict_first.keys():
+                        if i > ann_dict_first[phase]['start'] and i < ann_dict_first[phase]['end']:
+                            if phase_arr_first[i] == 0:
+                                phase_arr_first[i] = true_phases.index(phase) + 1
+                            else:
+                                error_str = video + ' '+ first_annotator + ' '+ phase + ': ' + str(ann_dict_first[phase]['start']) + ':' + str(ann_dict_first[phase]['end'])
+                                if error_str not in error_list:
+                                    error_list.append(error_str)
+                    if phase in ann_dict_second.keys():
+                        if i > ann_dict_second[phase]['start'] and i < ann_dict_second[phase]['end']:
+                            if phase_arr_second[i] == 0:
+                                phase_arr_second[i] = true_phases.index(phase) + 1
+                            else:
+                                error_str = video + ' '+ second_annotator + ' ' + phase + ': ' + str(ann_dict_second[phase]['start']) + ':' + str(ann_dict_second[phase]['end'])
+                                if error_str not in error_list:
+                                    error_list.append(error_str)
+            score = cohen_kappa(phase_arr_first,phase_arr_second)
+            A[video][first_annotator+'_'+second_annotator]['overall'] = score
+            # Compute IAA Score
 
     #### FLEISS SCORE: Compute for Medical Residents and Non-residents
     IAA = A
 
     FLEISS_IAA = dict()
+    print('Phase may have contradictions within same annotator are:')
+    for error in error_list:
+        print(error)
     return unique_keys,true_pairs,true_phases,IAA,FLEISS_IAA

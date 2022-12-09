@@ -1,38 +1,44 @@
 
-’
-phase_group≈
+¬
+phase_group≤
 phase\
 4Port Placement 1
-∞∑ :LC185B	Resident1"$d1d8f486-7040-49b3-87bc-0db61620c33c\
+∞∑ :LC185B	Resident1"$e60bb167-51ce-428e-a2aa-2c53a955665d\
 4Port Placement 2
-û® :LC185B	Resident1"$9c61799d-ecde-4ffc-b172-a7a22384ceef\
+û® :LC185B	Resident1"$d2412405-a0e4-461c-a02c-7924c464882f\
 4Port Placement 3
-æ¬ :LC185B	Resident1"$b2acf5fb-f850-499b-8bc1-fae45cc2fed5]
+æ¬ :LC185B	Resident1"$c11f38f9-d379-4590-896b-4a0d09da2c19]
 5Fundus Retraction
-‘è :LC185B	Resident1"$36c99345-26cd-4ee5-8ff3-adeb7b35a9d4o
+‘è :LC185B	Resident1"$6ff899f0-5d44-4568-8b91-59b697da67e9o
 G#Release of Gallbladder Peritoneum 1
-è÷ :LC185B	Resident1"$0f20a361-2fee-4872-b241-632ae450d72al
-D Dissection of Calot's Triangle 1
-÷¡ :LC185B	Resident1"$9d859886-bc1d-4b48-9ede-d6fa67fd63f8o
+èà :LC185B	Resident1"$1a6ee380-89d5-4632-8e91-a801c68f6aa6o
 G#Release of Gallbladder Peritoneum 2
-¡´ :LC185B	Resident1"$28257283-42c6-444e-9d10-126a9007ca5cl
+∏÷ :LC185B	Resident1"$f8caf5e9-8bc1-4302-8d07-671e5be967acl
+D Dissection of Calot's Triangle 1
+÷¡ :LC185B	Resident1"$e34b7d45-06d9-42b6-92dd-08e3d218ff03o
+G#Release of Gallbladder Peritoneum 3
+¡´ :LC185B	Resident1"$adefe456-8448-4a8c-839c-e881e7012681l
 D Dissection of Calot's Triangle 2
-´Ì :LC185B	Resident1"$2fc888fa-c4fb-4eb0-a3a2-7a583f041324X
+´Ì :LC185B	Resident1"$f8c6b0cb-bb9b-4c04-9782-2004c643cb16X
 0Checkpoint 1
-ÌÚ :LC185B	Resident1"$17307085-414b-4299-9c1c-3fcec8dd1a6eb
+ÌÚ :LC185B	Resident1"$3a4f7f52-cc41-49af-ba29-55b1969ab325b
 :Clipping Cystic Artery
-˙Ü :LC185B	Resident1"$b434d411-f2bc-4fd3-97eb-a7c6272a56afb
+˙Ü :LC185B	Resident1"$4ab14854-a907-426f-9a52-138b239825a6b
 :Division Cystic Artery
-ìò :LC185B	Resident1"$7f5808df-fc48-4b77-b100-7fb46d0cada0l
-D Dissection of Calot's Triangle 3
-ü≥ :LC185B	Resident1"$d98c185b-748e-47d2-84b4-f6034b7d827c`
+ìò :LC185B	Resident1"$fcbc2178-07f8-45c1-b348-02719b7876f5`
 8Clipping Cystic Duct
-ª“ :LC185B	Resident1"$87ff135e-48af-4808-ad34-0d7c4bec0df5`
+ª“ :LC185B	Resident1"$be6e5ca9-fc08-4962-a617-43638151babe`
 8Division Cystic Duct
-Ÿﬂ :LC185B	Resident1"$4f1e9281-6f42-4e33-93da-88d0941b6428X
+Ÿﬂ :LC185B	Resident1"$5dd301c0-9fce-4962-95c8-da5b3aed270aX
 0Checkpoint 2
-ﬂÊ :LC185B	Resident1"$bd89d62d-c6a6-4805-b255-68ac591882cbs
+ﬂÊ :LC185B	Resident1"$8cb4da31-dc5e-4b24-866e-aec840ab19a9s
 K'Removal of Gallbladder from Liver Bed 1
-Êû :LC185B	Resident1"$4f647486-e9ae-43e8-8b71-8f8a91b6e166b
+Êæ
+ :LC185B	Resident1"$54b47e5b-fc80-4acb-9fef-6436d19ab0e0s
+K'Removal of Gallbladder from Liver Bed 2
+œ
+Ä :LC185B	Resident1"$962e6dce-bf0d-423c-b7ea-5155f65a378ds
+K'Removal of Gallbladder from Liver Bed 3
+®ú :LC185B	Resident1"$e94d6ccf-83fd-4b42-a8e8-52fe423151adb
 :Bagging of Gallbladder
-¨Ó :LC185B	Resident1"$cc4a6d2a-9bfa-4fa1-9c02-6233cddb2a10
+¨Ó :LC185B	Resident1"$f2a18237-c73f-4091-a36a-c63c947ec128

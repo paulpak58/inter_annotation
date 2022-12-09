@@ -4,47 +4,47 @@
 phaseZ
 2Port Placement 1
 +3 :LC39B
-Layperson2"$50e87796-a50a-4828-9a10-46f6bd5f966c]
+Layperson2"$9f4fdd84-0df2-408c-818f-e57ded0728ae]
 5Fundus Retraction
 Ø˛ :LC39B
-Layperson2"$09ff4ed1-0d26-4080-8e1e-a260d4bfdcfbo
+Layperson2"$ae38b5c2-3101-4da9-b903-60206734f7c1o
 G#Release of Gallbladder Peritoneum 1
 ˛Á :LC39B
-Layperson2"$5e2f6f35-7bae-422e-b903-8d282e8cf06dl
+Layperson2"$abf86e0a-6dc3-4ae1-96fb-c3b31465fdc6l
 D Dissection of Calot's Triangle 1
 Ò¥ :LC39B
-Layperson2"$9301e5d3-30f3-4a1b-8637-3a0bffb09d72o
+Layperson2"$fdabef7f-52fe-4310-8124-3cfbea69da4fo
 G#Release of Gallbladder Peritoneum 2
 ∂“ :LC39B
-Layperson2"$4789a3e8-2197-486f-8895-d80d10262253l
+Layperson2"$8d0c190a-9aff-4054-a3a3-7a0535661a5bl
 D Dissection of Calot's Triangle 2
 ◊˚ :LC39B
-Layperson2"$54599329-3bef-4e11-91a9-4e71d87b1e50X
+Layperson2"$0e422770-80d6-4782-ab4f-60aad49820a0X
 0Checkpoint 1
 ¯Ñ :LC39B
-Layperson2"$ef5aa99f-f578-4542-9a98-58a6b8708b67`
+Layperson2"$1c48a64a-f6fe-44e5-bdb4-61683c5479f6`
 8Clipping Cystic Duct
 Üè :LC39B
-Layperson2"$35d9174b-5815-4f13-bc4f-aa4b17a7d5f7`
+Layperson2"$5bded10f-c308-4adf-9bb4-4bac407923ed`
 8Division Cystic Duct
 ò¨ :LC39B
-Layperson2"$055846df-e2f2-4e65-9db8-2127a165b814l
+Layperson2"$64bb9667-38b1-4594-9cbc-34c4367b1625l
 D Dissection of Calot's Triangle 3
 ≠ü :LC39B
-Layperson2"$a05ac16f-c09d-444f-90e5-a95d47c73889b
+Layperson2"$bcbf2998-7c87-4dcc-8144-42fcb4272f66b
 :Clipping Cystic Artery
 Æ¨	 :LC39B
-Layperson2"$ac62c243-e576-46c4-9b98-a4e87261f9a3b
+Layperson2"$727ddbfa-8144-4d0f-ac8c-122766230df6b
 :Division Cystic Artery
 ¥	æ	 :LC39B
-Layperson2"$b8db37d8-9823-4785-a060-22cc15a9abb3X
+Layperson2"$1068a277-03d8-406b-a83b-6053cf3becaeX
 0Checkpoint 2
 æ	–	 :LC39B
-Layperson2"$e1e3e138-da3e-4b2e-b123-e8bbcf2b1c68s
+Layperson2"$bff9b4bd-487c-494c-8a2d-7cf21ad3d3f6s
 K'Removal of Gallbladder from Liver Bed 1
 –	ı
  :LC39B
-Layperson2"$f6877dc2-91e2-470d-b37f-e489f553c9fdb
+Layperson2"$48518a6f-57c2-47d7-b7b2-b8634047a1b8b
 :Bagging of Gallbladder
 õì :LC39B
-Layperson2"$7d48e53a-3565-46f4-8f0d-4811bb611e95
+Layperson2"$b87fbf91-6153-448b-bd23-e67af6d6141b

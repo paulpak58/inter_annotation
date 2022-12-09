@@ -1,37 +1,34 @@
 
-ù	
-phase_groupç	
+Æ
+phase_groupû
 phase]
 5Port Placement 1
 àä :LC147B
-Layperson4"$d712769d-2807-4401-ab9a-7a936f986a29]
+Layperson4"$8be3fa85-c796-4dc9-abcc-1d1a74683be6]
 5Port Placement 2
 åé :LC147B
-Layperson4"$62fb7684-b654-46f2-b4be-e7d7c2e7aca5^
+Layperson4"$64bfb334-47d8-421b-9292-257c6f273319^
 6Fundus Retraction
 Õˇ :LC147B
-Layperson4"$988460c4-015b-4ea5-8a53-cac77165c468p
+Layperson4"$5749dba1-a99d-4b2e-95f8-0aef488e712ep
 H#Release of Gallbladder Peritoneum 1
 åº :LC147B
-Layperson4"$5f9c994d-9b3b-459c-b1f2-96a5bac01787p
+Layperson4"$cd15ecc4-b471-4f83-a41a-1b5670d2a6fdp
 H#Release of Gallbladder Peritoneum 2
 æŸ :LC147B
-Layperson4"$7a09ae82-5c90-4c86-b984-ca3faccd6f9fp
+Layperson4"$1e659327-e71a-4967-a7f2-1ad0dfc48417p
 H#Release of Gallbladder Peritoneum 3
 ‡∆ :LC147B
-Layperson4"$acc8d04c-577c-41de-9b25-a8f9cdb0dc22m
+Layperson4"$5925ae7d-5464-4544-93d7-175bad7aaf3em
 E Dissection of Calot's Triangle 1
 æ≈ :LC147B
-Layperson4"$31afc6c1-351d-41c8-b617-cdea08b76cefm
-E Dissection of Calot's Triangle 2
-Ã˛ :LC147B
-Layperson4"$12e01c6d-19ac-490f-af54-8010556e7d27Y
+Layperson4"$2539fbd3-f654-474b-aa23-846f7a81b1fbY
 1Checkpoint 1
 Ò¸ :LC147B
-Layperson4"$beda43c9-7418-457c-ba7f-d1580c7cbc9ca
+Layperson4"$e865e404-810b-4442-9644-a4339ec822a8a
 9Clipping Cystic Duct
 ˇ® :LC147B
-Layperson4"$d8b5b838-f1e9-4c50-b3ae-d67600efb5a4t
+Layperson4"$31e4a9f7-0063-4528-aecd-dba81a3d72a3t
 L'Removal of Gallbladder from Liver Bed 1
 Ü√ :LC147B
-Layperson4"$82dd92d5-195a-420b-a45e-1df2ff509e42
+Layperson4"$04c22d9d-78af-497e-8cda-d58b8be2974d

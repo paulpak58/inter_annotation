@@ -4,35 +4,35 @@
 phase[
 3Port Placement 1
 ,ê :LC39B
-Layperson3"$96c29226-718a-4a52-8ae0-a6fe76ef56e0]
+Layperson3"$150e0210-bb50-406d-b594-96b469fb18b2]
 5Fundus Retraction
 ∏¬ :LC39B
-Layperson3"$ab8535b3-97af-4079-aa35-e2f999b68667\
+Layperson3"$f68e039c-6356-419f-ae6c-f10810eeb143\
 4Port Placement 2
 ªê :LC39B
-Layperson3"$13f19762-ed17-440f-b1ec-59338527ff10o
+Layperson3"$7791777d-b030-424b-a672-a5c4938d1247o
 G#Release of Gallbladder Peritoneum 1
 ¸ô :LC39B
-Layperson3"$e7df2889-4b42-470b-ac37-89d13563699cl
+Layperson3"$0623ec39-d7c8-4573-84b5-1ba2288f1daal
 D Dissection of Calot's Triangle 1
 ©¬ :LC39B
-Layperson3"$9b04729a-1d74-4a6c-ae68-64e339c11720X
+Layperson3"$5659a30a-5ab7-4fee-b698-70fff1c49be9X
 0Checkpoint 1
 ˆÇ :LC39B
-Layperson3"$f5f9e97d-5a16-4295-9757-b5e25c4617bb`
+Layperson3"$4a0f993d-dd32-43c2-b9d1-a92bec593c60`
 8Clipping Cystic Duct
 ç©	 :LC39B
-Layperson3"$6d7b22fb-f0ff-4007-acad-b7ab27da8819`
+Layperson3"$d48e5564-fe97-410f-af97-8ef31aa183df`
 8Division Cystic Duct
 ∏	æ	 :LC39B
-Layperson3"$2870f791-3148-4847-954a-a075f55fc7c3X
+Layperson3"$770de7b5-6001-4a1d-870e-33d0b1051dc6X
 0Checkpoint 2
 æ	“	 :LC39B
-Layperson3"$ff471e4d-a01f-4bc2-bc1e-d90dbb8b6c8ds
+Layperson3"$14c5fd56-77b9-48ae-8229-a2fd01bc2f9es
 K'Removal of Gallbladder from Liver Bed 1
 “	
  :LC39B
-Layperson3"$2c1d7733-eaa0-4fa5-b64e-61e40189cc80b
+Layperson3"$a9def8d0-1e59-44c5-a933-c1a27eb6ee50b
 :Bagging of Gallbladder
 ö˜ :LC39B
-Layperson3"$cd1e8a46-13c9-4b87-9f08-8f2057954333
+Layperson3"$b376cb31-a7e4-4053-8e58-d48982acba06

@@ -21,7 +21,6 @@ def cohen_kappa(y1,y2):
 
     Modified from: https://towardsdatascience.com/inter-annotator-agreement-2f46c6d37bf3
     '''
-    # ipdb.set_trace()
     count = 0
     y1 = y1.tolist()
     y2 = y2.tolist()
@@ -30,15 +29,37 @@ def cohen_kappa(y1,y2):
             count+=1
     A = count/len(y1)                       # observed agreement A
     unique = set(y1+y2)
+
+    # if len(unique) == 1:
+    #     kappa =  1.0
+    # else:
     E = 0                                   # expected agreement
     for item in unique:
         count1 = y1.count(item)
         count2 = y2.count(item)
         count = ((count1/len(y1))*(count2/len(y2)))
         E += count
+    # kappa = round((A-E)/(1-E+1e-4),10)
+    kappa = round(1 - (1 - A)/(1-E+1e-10),3)
 
-    return round((A-E)/(1-E+1e-4),4)
+    return kappa
 
+def jaccard_index(y1,y2):
+    '''
+    y1: first annotations
+    y2: second annotations
+
+    Modified from: https://towardsdatascience.com/inter-annotator-agreement-2f46c6d37bf3
+    '''
+    count = 0
+    y1 = y1.tolist()
+    y2 = y2.tolist()
+    for an1,an2 in zip(y1,y2):
+        if an1==an2:
+            count+=1
+    A = count/len(y1)  # observed agreement A
+    A = round(A,3)
+    return A
 
 def fleiss_kappa(M):
     '''
@@ -64,9 +85,10 @@ def fleiss_kappa(M):
     return round((pbar_O-pbar_E)/(1-pbar_E),4)
 
 if __name__=='__main__':
-    target = np.array([2,1,0,0])
-    preds = np.array([2,1,0,1])
-    score1 = cohen_kappa(target,preds)
+    target = np.array([0,2,2,2,2])
+    preds = np.array([2,2,2,2,2])
+    # score1 = cohen_kappa(target,preds)
+    score1 = jaccard_index(target,preds)
     print(score1)
    
     an1 = np.array([2,1,0,0])

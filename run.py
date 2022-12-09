@@ -42,7 +42,6 @@ if __name__ == "__main__":
 
     # Load and read protobuf files
     class_names,annotations = load_protobuf_dir(params["output"])
-
     # Retrieve the annotations
     unique_keys,true_pairs,true_phases,IAA,FLEISS_IAA = retrieve_annotator_classifications(class_names,annotations)
 
@@ -53,6 +52,7 @@ if __name__ == "__main__":
     output_fn_fleiss = os.path.join(output_dir_fleiss + '.csv')
 
     header = ['Video name','User Pair','']
+    true_phases.append('overall')
     for phase in true_phases:
         header.append(phase)
     # header.append('Total Cohen IAA')

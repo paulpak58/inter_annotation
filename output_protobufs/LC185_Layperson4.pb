@@ -4,57 +4,57 @@
 phase]
 5Port Placement 1
 ±∂ :LC185B
-Layperson4"$b98e7a60-e6f1-41da-be60-a5b0cf5bde26]
+Layperson4"$781c4bf7-f599-4f18-9883-3dfd56583b1b]
 5Port Placement 2
 †ß :LC185B
-Layperson4"$b35c533c-2f24-493a-b811-6fd0638a0bde]
+Layperson4"$cb3e2aae-1c90-41eb-bfb8-78011867a445]
 5Port Placement 3
 æ¬ :LC185B
-Layperson4"$f0f138f4-aedc-417d-acfb-83cb9ba221b3^
+Layperson4"$24758311-a6b8-4961-8a60-d37016f08286^
 6Fundus Retraction
 Ìê :LC185B
-Layperson4"$bd3e3013-5e94-4018-b9c2-f34c950c5f81p
+Layperson4"$42679ec3-e539-44ed-9f54-b044f245f43cp
 H#Release of Gallbladder Peritoneum 1
 ô” :LC185B
-Layperson4"$49e0b9b9-9811-41ba-91c7-c65cc6f8a1a7p
+Layperson4"$6a17e8f2-926f-4f49-b992-ccc3f0f2b487p
 H#Release of Gallbladder Peritoneum 2
 ÁÅ :LC185B
-Layperson4"$17805329-1717-4672-bd0c-a5ea2108ca94p
+Layperson4"$f617fe60-319e-4204-b86f-3fa42e8231d7p
 H#Release of Gallbladder Peritoneum 3
 πŸ :LC185B
-Layperson4"$bc964351-2e5c-44c6-8c5a-76cdad1f11b9m
+Layperson4"$0e971f6e-6d8e-4a70-a0f6-fc81a8880e53m
 E Dissection of Calot's Triangle 1
 ‡é :LC185B
-Layperson4"$966c6720-0dc7-4eae-b89b-a624dfc6b18am
+Layperson4"$c64cb296-0583-4579-b0f1-f8590b314e05m
 E Dissection of Calot's Triangle 2
 ¥Ï :LC185B
-Layperson4"$0ba016f0-f838-4ad7-bd11-69085dacb6b1Y
+Layperson4"$7fc14b59-7fd0-4a90-a388-12184be8e1b1Y
 1Checkpoint 1
 ÌÒ :LC185B
-Layperson4"$b85278fe-dad0-4b18-b124-35b7ab068243a
+Layperson4"$52722eed-cadf-4b11-bc11-d5fbc9b00d77a
 9Clipping Cystic Duct
 ˚Ö :LC185B
-Layperson4"$0b03003d-cb8a-408a-bdce-b1db2b37466ac
+Layperson4"$c81e946d-baca-402a-9d94-b735c942f96ec
 ;Division Cystic Artery
 îó :LC185B
-Layperson4"$47a4c197-102c-44c7-aecf-57de636ccfc0c
+Layperson4"$ce984eb5-3ab2-4a98-9acd-5279b5ffbed2c
 ;Clipping Cystic Artery
 º“ :LC185B
-Layperson4"$6c880274-d8ce-44e8-95d0-cf5924c75419a
+Layperson4"$3ab4f7b3-3e89-44ca-9e58-4e87c5606e1fa
 9Division Cystic Duct
 Ÿﬂ :LC185B
-Layperson4"$3c4e5b50-b175-48dd-946e-953647e554f9Y
+Layperson4"$fec9ea68-32ce-41d5-a143-44e19ba83f37Y
 1Checkpoint 2
 ‡î	 :LC185B
-Layperson4"$b1c1dcce-f227-454b-986b-12c162ac7b49t
+Layperson4"$8a1a9b12-45b6-41da-acf2-b46b118fc4e6t
 L'Removal of Gallbladder from Liver Bed 1
 £	∏
  :LC185B
-Layperson4"$868728b1-4a36-4270-84a5-8df3377c9297t
+Layperson4"$dcc96e50-7c5d-4141-8edc-0716cf8cdde3t
 L'Removal of Gallbladder from Liver Bed 2
 œ
 ˇ :LC185B
-Layperson4"$024792ad-3e15-4c36-95ac-88fa93068874c
+Layperson4"$c07e781f-2a16-4f90-898e-cce92ae0566fc
 ;Bagging of Gallbladder
 ´Ë :LC185B
-Layperson4"$0f5d00d4-2ec8-43f5-b458-d3b11b84ff7a
+Layperson4"$8c8264ea-aae1-4e24-8114-a12831935e47
