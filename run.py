@@ -5,7 +5,7 @@ import argparse
 from itertools import combinations
 from inter_annotate import cohen_kappa_score,cohen_kappa,fleiss_kappa
 from retrieve_annotations import load_class_names,create_track_groups,write_files,load_protobuf_dir,retrieve_annotator_classifications
-
+from visualization import plot_confusion_matrix
 def parse_args(): 
     """Parse arguments
 
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     # Load and read protobuf files
     class_names,annotations = load_protobuf_dir(params["output"])
     # Retrieve the annotations
-    unique_keys,true_pairs,true_phases,IAA,FLEISS_IAA = retrieve_annotator_classifications(class_names,annotations)
+    unique_keys,true_pairs,true_phases,IAA,FLEISS_IAA, cm = retrieve_annotator_classifications(class_names,annotations)
 
     # Write inter-agreement annotations to output file
     output_dir_cohen = 'results/IAA_cohen' if params["results_cohen"] is None else str(params["results_cohen"])
@@ -58,8 +58,8 @@ if __name__ == "__main__":
     # header.append('Total Cohen IAA')
     
     rows = list()
-    for video in unique_keys:
-        for annotator_pair in true_pairs:
+    for annotator_pair in true_pairs:
+        for video in unique_keys:
             row = dict()
 
             # Set header labels
@@ -80,3 +80,23 @@ if __name__ == "__main__":
         writer = csv.DictWriter(f,fieldnames=header)
         writer.writeheader()
         writer.writerows(rows)
+
+    group_cm = dict()
+    group_names = ['Resident', 'Layperson']
+    for group in group_names:
+        group_cm[group] = np.zeros((len(true_phases[:-1]) + 1,len(true_phases[:-1]) + 1))
+
+    for video in cm.keys():
+        for pair in cm[video].keys():
+            annotator_name = pair[1]
+            group_name = [x for x in group_names if x in annotator_name][0]
+            group_cm[group_name] += cm[video][pair]
+
+    for group in group_names:
+        axis_labels = ['None']
+        axis_labels.extend(true_phases[:-1])
+        plot_confusion_matrix(group_cm[group], axis_labels,
+                              normalize='Recall',
+                              title='   ',
+                              res_dir='./results_plot/cm/',
+                              res_filename = 'Confusion_Matrix_'+group)

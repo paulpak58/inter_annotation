@@ -84,6 +84,13 @@ def fleiss_kappa(M):
 
     return round((pbar_O-pbar_E)/(1-pbar_E),4)
 
+def confusion_matrix(y1,y2, N):
+    cm = np.zeros((N,N))
+    for i in range(len(y1)):
+        cm[int(y1[i]),int(y2[i])] += 1
+
+    return cm
+
 if __name__=='__main__':
     target = np.array([0,2,2,2,2])
     preds = np.array([2,2,2,2,2])

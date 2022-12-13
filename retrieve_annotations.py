@@ -12,7 +12,7 @@ import sages_pb2
 from sages_pb2 import *
 import multidict
 import google.protobuf.timestamp_pb2
-from inter_annotate import cohen_kappa_score, cohen_kappa, jaccard_index
+from inter_annotate import cohen_kappa_score, cohen_kappa, jaccard_index, confusion_matrix
 from itertools import combinations,permutations
 
 def seconds_to_timestamp(seconds):
@@ -367,6 +367,7 @@ def retrieve_annotator_classifications(class_names,annotations):
     
     A = dict()
     error_list = list()
+    cm = dict()
     for video in unique_keys:
         A[video] = dict()
         for annotator_pair in true_pairs:
@@ -396,8 +397,13 @@ def retrieve_annotator_classifications(class_names,annotations):
                     # Compute IAA Score 
                     score = jaccard_index(phase_arr_first,phase_arr_second)
                     # score = cohen_kappa_score(phase_arr_second,phase_arr_first,num_classes=2).item()*-1
-                    A[video][first_annotator+'_'+second_annotator][phase] = score
-                    # print(score)
+                    
+                elif phase in ann_dict_first or phase in ann_dict_second:
+                    score = 0.0 # if phase is annotated in one annotator and not in the other
+                elif (phase not in ann_dict_first) and (phase not in ann_dict_second):
+                    score = 1.0 # if phase is not annotated in either annotator
+
+                A[video][first_annotator+'_'+second_annotator][phase] = score
             
             # overall cohen kappa per video 
             phase_arr_first = np.zeros(max_vid_lens[video])
@@ -421,6 +427,9 @@ def retrieve_annotator_classifications(class_names,annotations):
                                 if error_str not in error_list:
                                     error_list.append(error_str)
             score = cohen_kappa(phase_arr_first,phase_arr_second)
+            if video not in cm.keys():
+                cm[video] = dict()
+            cm[video][annotator_pair] = confusion_matrix(phase_arr_first,phase_arr_second, len(true_phases)+1)
             A[video][first_annotator+'_'+second_annotator]['overall'] = score
             # Compute IAA Score
 
@@ -431,4 +440,4 @@ def retrieve_annotator_classifications(class_names,annotations):
     print('Phase may have contradictions within same annotator are:')
     for error in error_list:
         print(error)
-    return unique_keys,true_pairs,true_phases,IAA,FLEISS_IAA
+    return unique_keys,true_pairs,true_phases,IAA,FLEISS_IAA, cm

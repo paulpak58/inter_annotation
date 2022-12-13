@@ -47,8 +47,10 @@ dependencies:
     - ipython==8.7.0
     - jedi==0.18.2
     - joblib==1.2.0
+    - matplotlib
     - matplotlib-inline==0.1.6
     - multidict==6.0.2
+    - opencv-python
     - packaging==21.3
     - parso==0.8.3
     - pexpect==4.8.0
