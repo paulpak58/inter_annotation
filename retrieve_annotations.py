@@ -327,13 +327,15 @@ def retrieve_true_values(class_names,unique_annotators):
     return true_phases,true_pairs
 
 def retrieve_annotator_classifications(class_names,annotations):
-    fps = 1.0
+    #### Computes the Jaccard similarity between two sets of annotations
+    #### Computes the Multiclass Cohen's Kappa score over all annotators
     all_keys = [key.split('_')[0] for key in annotations.keys()]
     all_annotators = [key.split('_')[1] for key in annotations.keys()]
     unique_keys = [*set(all_keys)]
     unique_annotators = [*set(all_annotators)]
     true_phases, true_pairs = retrieve_true_values(class_names,unique_annotators)
-    #### FIND maximum time stamp to define the length for each video
+
+    # Find the maximum time stamp for each video
     max_vid_lens = dict()
     for video in unique_keys:
         max_vid_len = 0
@@ -343,11 +345,11 @@ def retrieve_annotator_classifications(class_names,annotations):
                     max_vid_len = int(max(max_vid_len,((annotations[video+'_'+annotator])[phase])['end']))
         max_vid_lens[video] = max_vid_len+1
 
+    # Construct our data structure of annotations
     annotations_true_phase = dict()
     for video in unique_keys:
         for annotator in unique_annotators:
             annotations_true_phase[video+'_'+annotator] = dict()
-
             for phase in class_names['phase']:
                 if phase in annotations[video+'_'+annotator]:
 
@@ -362,8 +364,6 @@ def retrieve_annotator_classifications(class_names,annotations):
                         
                         annotations_true_phase[video+'_'+annotator][true_phase]['start'] = min(annotations[video+'_'+annotator][phase]['start'],prev_start)
                         annotations_true_phase[video+'_'+annotator][true_phase]['end'] = max(annotations[video+'_'+annotator][phase]['end'],prev_end)
-
-
     
     A = dict()
     error_list = list()
@@ -376,7 +376,6 @@ def retrieve_annotator_classifications(class_names,annotations):
             ann_dict_first = annotations_true_phase[video+'_'+first_annotator]
             ann_dict_second = annotations_true_phase[video+'_'+second_annotator]
             A[video][first_annotator+'_'+second_annotator] = dict() 
-            # for phase in class_names['phase']:
             for phase in true_phases:
                 if phase in ann_dict_first and phase in ann_dict_second:
                     start_first = math.floor(ann_dict_first[phase]['start'])
@@ -394,9 +393,8 @@ def retrieve_annotator_classifications(class_names,annotations):
                             phase_arr_first[i] = 1.
                         if start_second<=(i+MIN_START) and end_second>=(i+MIN_START):
                             phase_arr_second[i] = 1.
-                    # Compute IAA Score 
+                    # Compute Jaccard Index
                     score = jaccard_index(phase_arr_first,phase_arr_second)
-                    # score = cohen_kappa_score(phase_arr_second,phase_arr_first,num_classes=2).item()*-1
                     
                 elif phase in ann_dict_first or phase in ann_dict_second:
                     score = 0.0 # if phase is annotated in one annotator and not in the other
@@ -431,11 +429,9 @@ def retrieve_annotator_classifications(class_names,annotations):
                 cm[video] = dict()
             cm[video][annotator_pair] = confusion_matrix(phase_arr_first,phase_arr_second, len(true_phases)+1)
             A[video][first_annotator+'_'+second_annotator]['overall'] = score
-            # Compute IAA Score
 
-    #### FLEISS SCORE: Compute for Medical Residents and Non-residents
+    #### (Not Implemented) FLEISS SCORE: Compute for Medical Residents and Non-residents
     IAA = A
-
     FLEISS_IAA = dict()
     print('Phase may have contradictions within same annotator are:')
     for error in error_list:
