@@ -1,0 +1,172 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<!-- <crowd-form answer-format="flatten-objects"> -->
+<crowd-form answer-format="flatten-objects">
+
+    <!-- The crowd-classifier element will create a tool for the Worker to select the
+           correct answer to your question -->
+
+
+    <!--       categories="['Port Placement','Fundus Retraction','Release Gallbladder Peritoneum','Dissection of Calot’s triangle',
+                   'Critical View of Safety','Checkpoint 1','Clipping of Cystic Duct','Clipping of Cystic Artery','Division of Cystic Artery',
+                   'DivisionofCysticDuct','Checkpoint 2','Removal of Gallbladder from Liverbed','Bagging of Gallbladder','Other']" -->
+    <crowd-classifier 
+      name="category"
+      categories="['Fill in the text areas below']"
+      header="Description"
+    >
+    
+
+      <classification-target>
+         <video width="100%" height="315" controls>
+
+          <!-- Your video file URLs will be substituted for the "video_url" attribute below when 
+                 you publish a batch with a CSV input file containing multiple video file URLs -->
+          <source src="${video_url}" type="video/mp4">
+
+        </video> 
+      </classification-target>
+      
+    
+     <!-- Use the short-instructions section for quick instructions that the Worker
+            will see while working on the task. Including some basic examples of 
+            good and bad answers here can help get good results. You can include 
+            any HTML here. -->
+      <short-instructions>
+        <p>Read the task carefully and inspect the video.</p>
+        <p>Choose the appropriate label that best suits the video.</p>
+      </short-instructions>
+
+
+      <!-- Use the full-instructions section for more detailed instructions that the 
+            Worker can open while working on the task. Including more detailed 
+            instructions and additional examples of good and bad answers here can
+            help get good results. You can include any HTML here. -->
+      <full-instructions header="Video Classification Instructions">
+        <p>Read the task carefully and inspect the video. Label the start and end time of each phase</p>
+        <p>Choose the appropriate label that best suits the video.</p>
+      </full-instructions>
+      
+    </crowd-classifier>
+
+
+  <head>
+      <meta charset="UTF-8">
+      <title>Half-Width Paragraph</title>
+      <style>
+        .paragraph-wrapper {
+            width: 100%;
+            display: flex;
+        }
+        p {
+            display: inline-block;
+            width: 50%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 0;
+        }
+        h3 { 
+            margin-bottom: 0;
+        }
+      </style>
+  </head>
+
+  <body>
+    <h1>Phase Annotation</h1>
+    <h2>Task Description</h2>
+    <p>Watch the video below and classify the content in the two boxes.</p>
+
+    <h3>Port Placement</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag1" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag2" label="End 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag3" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag4" label="End 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag5" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag6" label="End 3 (HH:MM:SS)" ></crowd-input></p>
+    </div>
+    <h3>Fundus Retraction</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag7" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag8" label="End (HH:MM:SS)" required></crowd-input></p>
+    </div>
+    <h3>Release of Gallbladder Peritoneum</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag9" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag10" label="End 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag11" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag12" label="End 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag13" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag14" label="End 3 (HH:MM:SS)" ></crowd-input></p>
+    </div>
+    <h3>Dissection of Calot's Triangle</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag15" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag16" label="End 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag17" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag18" label="End 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag19" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag20" label="End 3 (HH:MM:SS)" ></crowd-input></p>
+    </div>
+    <h3>CVS</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag21" label="Start (HH:MM:SS)" required></crowd-input></p>
+    </div>
+    <h3>Checkpoint 1</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag22" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag23" label="End (HH:MM:SS)" required></crowd-input></p>
+    </div>
+    <h3>Clipping Cystic Duct</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag24" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag25" label="End (HH:MM:SS)" required></crowd-input></p>
+    </div>
+    <h3>Clipping Cystic Artery</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag26" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag27" label="End (HH:MM:SS)" required></crowd-input></p>
+    </div>
+    <h3>Division Cystic Artery</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag28" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag29" label="End (HH:MM:SS)" required></crowd-input></p>
+    </div>
+    <h3>Division Cystic Duct</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag30" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag31" label="End (HH:MM:SS)" required></crowd-input></p>
+    </div>
+    <h3>Checkpoint 2</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag32" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag33" label="End (HH:MM:SS)" required></crowd-input></p>
+    </div>
+    <h3>Removal of Gallbladder from Liver Bed</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag34" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag35" label="End 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag36" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag37" label="End 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag38" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input name="tag39" label="End 3 (HH:MM:SS)" ></crowd-input></p>
+    </div>
+    <h3>Bagging of Gallbladder</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="tag40" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input name="tag41" label="End (HH:MM:SS)" required></crowd-input></p>
+    </div>
+  </body>
+
+  <script>
+    const myDivs = document.querySelectorAll('.category-picker');
+    myDivs[0].querySelector("h2").textContent = "New Header";
+    console.log(myDivs);
+  </script>
+
+</crowd-form>
