@@ -17,7 +17,7 @@
                    'DivisionofCysticDuct','Checkpoint 2','Removal of Gallbladder from Liverbed','Bagging of Gallbladder','Other']" -->
     <crowd-classifier 
       name="category"
-      categories="['Fill in the text areas below']"
+      categories="['There is nothing to select here.\n Fill in the text areas below.']"
       header="Description"
     >
     
@@ -27,7 +27,7 @@
 
           <!-- Your video file URLs will be substituted for the "video_url" attribute below when 
                  you publish a batch with a CSV input file containing multiple video file URLs -->
-          <source src="${video_url}" type="video/mp4">
+          <source src="${video_url}" type="video/mp4"></iframe>
 
         </video> 
       </classification-target>
@@ -57,7 +57,7 @@
 
   <head>
       <meta charset="UTF-8">
-      <title>Half-Width Paragraph</title>
+      <title>Laparoscopic Cholecystectomy Phase Classification</title>
       <style>
         .paragraph-wrapper {
             width: 100%;
@@ -79,94 +79,130 @@
   <body>
     <h1>Phase Annotation</h1>
     <h2>Task Description</h2>
-    <p>Watch the video below and classify the content in the two boxes.</p>
+    <p>Watch the video above and fill out the start and end times for each phase in the surgery. For phases that have more than one [start, end] option,
+      you are only required to fill out one start and end time but can add more if needed.
+    </p>
 
     <h3>Port Placement</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag1" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag2" label="End 1 (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag3" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag4" label="End 2 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag5" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag6" label="End 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Port Placement 1 Start time" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Port Placement 1 End time" label="End 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Port Placement 2 Start time" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Port Placement 2 End time" label="End 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Port Placement 3 Start time" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Port Placement 3 End time" label="End 3 (HH:MM:SS)" ></crowd-input></p>
     </div>
     <h3>Fundus Retraction</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag7" label="Start (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag8" label="End (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Fundus Retraction Start time" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Fundus Retraction End time" label="End (HH:MM:SS)" required></crowd-input></p>
     </div>
     <h3>Release of Gallbladder Peritoneum</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag9" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag10" label="End 1 (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag11" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag12" label="End 2 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag13" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag14" label="End 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Release of Gallbladder Peritoneum 1 Start time" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Release of Gallbladder Peritoneum 1 End time" label="End 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Release of Gallbladder Peritoneum 2 Start time" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Release of Gallbladder Peritoneum 2 End time" label="End 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Release of Gallbladder Peritoneum 3 Start time" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Release of Gallbladder Peritoneum 3 End time" label="End 3 (HH:MM:SS)" ></crowd-input></p>
     </div>
     <h3>Dissection of Calot's Triangle</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag15" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag16" label="End 1 (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag17" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag18" label="End 2 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag19" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag20" label="End 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Dissection of Calot's Triangle 1 Start time" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Dissection of Calot's Triangle 1 End time" label="End 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Dissection of Calot's Triangle 2 Start time" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Dissection of Calot's Triangle 2 End time" label="End 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Dissection of Calot's Triangle 3 Start time" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Dissection of Calot's Triangle 3 End time" label="End 3 (HH:MM:SS)" ></crowd-input></p>
     </div>
     <h3>CVS</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag21" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="CVS Start time" label="Start (HH:MM:SS)" required></crowd-input></p>
     </div>
     <h3>Checkpoint 1</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag22" label="Start (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag23" label="End (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Checkpoint 1 Start time" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Checkpoint 1 End time" label="End (HH:MM:SS)" required></crowd-input></p>
     </div>
     <h3>Clipping Cystic Duct</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag24" label="Start (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag25" label="End (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Clipping Cystic Duct Start time" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Clipping Cystic Duct End time" label="End (HH:MM:SS)" required></crowd-input></p>
     </div>
     <h3>Clipping Cystic Artery</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag26" label="Start (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag27" label="End (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Clipping Cystic Artery Start time" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Clipping Cystic Artery End time" label="End (HH:MM:SS)" required></crowd-input></p>
     </div>
     <h3>Division Cystic Artery</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag28" label="Start (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag29" label="End (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Division Cystic Artery Start time" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Division Cystic Artery End time" label="End (HH:MM:SS)" required></crowd-input></p>
     </div>
     <h3>Division Cystic Duct</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag30" label="Start (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag31" label="End (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Division Cystic Duct Start time" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Division Cystic Duct End time" label="End (HH:MM:SS)" required></crowd-input></p>
     </div>
     <h3>Checkpoint 2</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag32" label="Start (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag33" label="End (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Checkpoint 2 Start time" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Checkpoint 2 End time" label="End (HH:MM:SS)" required></crowd-input></p>
     </div>
     <h3>Removal of Gallbladder from Liver Bed</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag34" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag35" label="End 1 (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag36" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag37" label="End 2 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag38" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
-        <p><crowd-input name="tag39" label="End 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Removal of Gallbladder from Liver Bed 1 Start time" label="Start 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Removal of Gallbladder from Liver Bed 1 End time" label="End 1 (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Removal of Gallbladder from Liver Bed 2 Start time" label="Start 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Removal of Gallbladder from Liver Bed 2 End time" label="End 2 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Removal of Gallbladder from Liver Bed 3 Start time" label="Start 3 (HH:MM:SS)" ></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Removal of Gallbladder from Liver Bed 3 End time" label="End 3 (HH:MM:SS)" ></crowd-input></p>
     </div>
     <h3>Bagging of Gallbladder</h3>
     <div class="paragraph-wrapper">
-        <p><crowd-input name="tag40" label="Start (HH:MM:SS)" required></crowd-input></p>
-        <p><crowd-input name="tag41" label="End (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Bagging of Gallbladder Start time" label="Start (HH:MM:SS)" required></crowd-input></p>
+        <p><crowd-input class="user_phase" name="Bagging of Gallbladder End time" label="End (HH:MM:SS)" required></crowd-input></p>
     </div>
+
+
   </body>
 
-  <script>
-    const myDivs = document.querySelectorAll('.category-picker');
-    myDivs[0].querySelector("h2").textContent = "New Header";
-    console.log(myDivs);
-  </script>
-
 </crowd-form>
+
+<script type="text/javascript">
+
+  ///////////////////////////////////////
+  // Event listener for the submit button
+  ///////////////////////////////////////
+  function handle_submit_button(event){
+    event.preventDefault();
+    validate_inputs();
+  }
+
+  ///////////////////////////////////////////////////////////
+  // Ensure that the format of the user inputs are "HH:MM:SS"
+  ///////////////////////////////////////////////////////////
+  var pattern = /^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/;
+  function validate_inputs() {
+    // Retrieve input elements
+    var inputs = document.querySelectorAll('.user_phase');
+    for(var i = 0; i < inputs.length; i++) {
+      // Validate the format of each input element
+      if(!pattern.test(inputs[i].value)){
+        alert("Please enter a valid time in the format HH:MM:SS for " + inputs[i].name);
+        return;
+      }
+    }
+    // If all inputs are valid, submit the form
+    // document.getElementById("form").submit();
+    document.querySelector('body > crowd-form > form > crowd-classifier').shadowRoot.querySelector('#react-mount-point > .awsui > div > .awsui > div > footer > #actionsContainer > awsui-button > button').submit();
+  }
+    
+  // Add event listener to the submit button
+  // document.querySelectorAll('.awsui-button.awsui-button-variant-primary.awsui-hover-child-icons')[0].addEventListener('click', handle_submit_button);
+  window.onload = function() {
+      console.log('Listening');
+      document.querySelector('body > crowd-form > form > crowd-classifier').shadowRoot.querySelector('#react-mount-point > .awsui > div > .awsui > div > footer > #actionsContainer > awsui-button > button').addEventListener('click', handle_submit_button);      
+  }
+
+</script>
