@@ -163,10 +163,7 @@
         <p><crowd-input class="user_phase" name="Bagging of Gallbladder Start time" label="Start (HH:MM:SS)" required></crowd-input></p>
         <p><crowd-input class="user_phase" name="Bagging of Gallbladder End time" label="End (HH:MM:SS)" required></crowd-input></p>
     </div>
-
-
   </body>
-
 </crowd-form>
 
 <script type="text/javascript">
@@ -183,6 +180,7 @@
   // Ensure that the format of the user inputs are "HH:MM:SS"
   ///////////////////////////////////////////////////////////
   var pattern = /^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/;
+
   function validate_inputs() {
     // Retrieve input elements
     var inputs = document.querySelectorAll('.user_phase');
@@ -194,15 +192,30 @@
       }
     }
     // If all inputs are valid, submit the form
-    // document.getElementById("form").submit();
-    document.querySelector('body > crowd-form > form > crowd-classifier').shadowRoot.querySelector('#react-mount-point > .awsui > div > .awsui > div > footer > #actionsContainer > awsui-button > button').submit();
+    document.getElementById('page_body').
+          querySelector(' #page_content > #default_grid > form > #template_preview > #previewCapsuleAndHIT > div > .table_box > iframe').contentDocument.
+          querySelector('body > crowd-form > form > crowd-classifier').shadowRoot.
+          querySelector('#react-mount-point > .awsui > div > .awsui > div > footer > #actionsContainer > awsui-button > button').
+          submit();
   }
     
   // Add event listener to the submit button
-  // document.querySelectorAll('.awsui-button.awsui-button-variant-primary.awsui-hover-child-icons')[0].addEventListener('click', handle_submit_button);
-  window.onload = function() {
-      console.log('Listening');
-      document.querySelector('body > crowd-form > form > crowd-classifier').shadowRoot.querySelector('#react-mount-point > .awsui > div > .awsui > div > footer > #actionsContainer > awsui-button > button').addEventListener('click', handle_submit_button);      
-  }
+  var tries = 200;
+  document.addEventListener('DOMContentLoaded',
+    function setButton() {
+      var button = document.getElementById('page_body');
+      if(button==null && tries > 0){
+        console.log('Element not Found');
+        tries--;
+        setTimeout(setButton, 1000);
+      }else{
+        var button = document.getElementById('page_body').
+                      querySelector('#page_content > #default_grid > form > #template_preview > #previewCapsuleAndHIT > div > .table_box > iframe').contentDocument.
+                      querySelector('body > crowd-form > form > crowd-classifier').shadowRoot.
+                      querySelector('#react-mount-point > .awsui > div > .awsui > div > footer > #actionsContainer > awsui-button > button');
+        button.addEventListener('click', handle_submit_button);
+      }
+
+  });
 
 </script>
