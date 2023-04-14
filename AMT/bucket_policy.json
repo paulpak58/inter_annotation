@@ -1,17 +1,25 @@
 {
-	"Version": "2012-10-17",
+	"Version": "2008-10-17",
 	"Statement": [
 		{
 			"Sid": "AllowVideoAccessForMTurkTask",
 			"Effect": "Allow",
 			"Principal": "*",
 			"Action": "s3:GetObject",
-			"Resource": "arn:aws:s3:::surgical-phase-annotation-bucket-test/test_vid.mp4",
+			"Resource": [
+				"arn:aws:s3:::mghvideos/Annotation_paper/Group1/*",
+				"arn:aws:s3:::mghvideos/Annotation_paper/Group2/*",
+				"arn:aws:s3:::mghvideos/Annotation_paper/Group3/*",
+				"arn:aws:s3:::mghvideos/Annotation_paper/Group4/*",
+				"arn:aws:s3:::mghvideos/Annotation_paper/Group5/*"
+			],
 			"Condition": {
 				"StringLike": {
 					"aws:Referer": [
 						"https://workersandbox.mturk.com/*",
-						"https://requestersandbox.mturk.com/*"
+						"https://requestersandbox.mturk.com/*",
+						"https://worker.mturk.com/*",
+						"https://requester.mturk.com/*"
 					]
 				}
 			}
