@@ -17,8 +17,8 @@
                    'DivisionofCysticDuct','Checkpoint 2','Removal of Gallbladder from Liverbed','Bagging of Gallbladder','Other']" -->
     <crowd-classifier 
       name="category"
-      categories="['There is nothing to select here.\n Fill in the text areas below.']"
-      header="Description"
+      categories="['1=Very Easy','2=Easy','3=Medium','4=Hard','5=Very Hard']"
+      header="How difficult was the annotation of this video? (1=easy, 5=hard). Please make sure you familiarize yourself with the Annotation Protocol before annotating the start and endpoints of surgical phases in laparoscopic Cholecystectomy."
     >
     
 
@@ -38,8 +38,9 @@
             good and bad answers here can help get good results. You can include 
             any HTML here. -->
       <short-instructions>
-        <p>Read the task carefully and inspect the video.</p>
-        <p>Choose the appropriate label that best suits the video.</p>
+        <p>Please review the annotation protocol (pdf document) for the definitions of the start and endpoints of surgical phases in laparoscopic Cholecystectomy. </p>
+        <p>Watch the video and note the individual times for start/endpoints of each phase in the format HH:MM:SS. </p>
+        <p>Some phases may have multiple occurances or be interrupted, and therefore require the annotaiton of multiple start and endpoints.</p>
       </short-instructions>
 
 
@@ -48,8 +49,9 @@
             instructions and additional examples of good and bad answers here can
             help get good results. You can include any HTML here. -->
       <full-instructions header="Video Classification Instructions">
-        <p>Read the task carefully and inspect the video. Label the start and end time of each phase</p>
-        <p>Choose the appropriate label that best suits the video.</p>
+        <p>Please review the annotation protocol (pdf document) for the definitions of the start and endpoints of surgical phases in laparoscopic Cholecystectomy.</p>
+        <p>Watch the video and note the individual times for start/endpoints of each phase in the format HH:MM:SS.</p>
+        <p>Some phases may have multiple occurances or be interrupted, and therefore require the annotaiton of multiple start and endpoints.</p>
       </full-instructions>
       
     </crowd-classifier>
@@ -79,9 +81,14 @@
   <body>
     <h1>Phase Annotation</h1>
     <h2>Task Description</h2>
-    <div class ="paragraph-wrapper">
-        <p>Watch the video above and fill out the start and end times for each phase in the surgery. For phases that have more than one [start, end] option,
-      you are only required to fill out one start and end time but can add more if needed.
+    <div>
+        <p style="width:100%;">Watch the video above and fill out the times of start and endpoint (Format HH:MM:SS) for each surgical phase in the observed laparoscopic cholecystectomy video. 
+        Some phases occur more than once (e.g. Port Placement) or are interrupted by altervative actions (e.g. Dissection of Gallbladder Peritoneum interrupted by longer pause in dissection).
+        In that case, please annotate a separate start and endpoint for each occurance / segment of the phase. 
+        You are required to annotate <b>at least one</b> start and endpoint (Format HH:MM:SS) for each phase. If that phase does not at all occur in the video, please annotate as 00:00:00.
+        Your annotation performance will be evaluated according to the inter-rater agreement with clinical annotation experts. Inadequately filled out forms will not be accepted.
+        Please review the <a href="https://mghvideos.s3.us-east-2.amazonaws.com/Annotation+Protocol+AmTurk.pdf" target="_blank">annotation protocol</a> regularly throughout the annotation process.
+        In case of questions or concern please contact: <a href="mailto:surgicalannotation@gmail.com">surgicalannotation@gmail.com</a>.
         </p>
     </div>
 
