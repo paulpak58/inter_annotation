@@ -19,7 +19,8 @@
 						"https://workersandbox.mturk.com/*",
 						"https://requestersandbox.mturk.com/*",
 						"https://worker.mturk.com/*",
-						"https://requester.mturk.com/*"
+						"https://requester.mturk.com/*",
+						"https://mturk.com/*"
 					]
 				}
 			}
