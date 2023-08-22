@@ -303,7 +303,7 @@ def write_files(annotation_set_dicts,params):
             fp.write(annotation_set.SerializeToString())
             fp.close()
 
-def retrieve_true_values(class_names,unique_annotators):
+def retrieve_true_values(class_names,unique_annotators,gt_name='GroundTruth'):
     #### Merge phase segments belonging to the same phase into one; In other words, we remove all digits from phase titles except if
     #### the phase is a Checkpoint
     true_phases = list()
@@ -320,8 +320,8 @@ def retrieve_true_values(class_names,unique_annotators):
     Z = list(combinations(unique_annotators,2))
     true_pairs = list()
     for pair in Z:
-        if 'Resident1' in pair[0] or 'Resident1' in pair[1]:
-            true_pairs.append(pair) if 'Resident1' in pair[0] else true_pairs.append((pair[1], pair[0]))
+        if gt_name in pair[0] or gt_name in pair[1]:
+            true_pairs.append(pair) if gt_name in pair[0] else true_pairs.append((pair[1], pair[0]))
 
     true_pairs.sort()
     return true_phases,true_pairs
