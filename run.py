@@ -61,7 +61,7 @@ if __name__ == "__main__":
     for annotator_pair in true_pairs:
         for video in unique_keys:
             row = dict()
-
+            valid_row = False
             # Set header labels
             row['Video name'] = video
             first_annotator = annotator_pair[0]
@@ -70,26 +70,35 @@ if __name__ == "__main__":
             row[''] = ''
 
             for phase in true_phases:
-                if phase in IAA[video][first_annotator+'_'+second_annotator].keys():
-                    row[phase] = IAA[video][first_annotator+'_'+second_annotator][phase]
-                else:
-                    row[phase] = 0
-            rows.append(row)
-
+                if first_annotator+'_'+second_annotator in IAA[video].keys():
+                    valid_row = True
+                    if phase in IAA[video][first_annotator+'_'+second_annotator].keys():
+                        row[phase] = IAA[video][first_annotator+'_'+second_annotator][phase]
+                    else:
+                        row[phase] = 0
+            if valid_row is True:
+                rows.append(row)
+            
     with open(output_fn_cohen,'w') as f:
         writer = csv.DictWriter(f,fieldnames=header)
         writer.writeheader()
         writer.writerows(rows)
 
     group_cm = dict()
-    group_names = ['Resident', 'Layperson']
+    # group_names = ['Resident', 'Layperson']
+    group_names = ['AMT_Turker']
     for group in group_names:
         group_cm[group] = np.zeros((len(true_phases[:-1]) + 1,len(true_phases[:-1]) + 1))
 
     for video in cm.keys():
         for pair in cm[video].keys():
             annotator_name = pair[1]
-            group_name = [x for x in group_names if x in annotator_name][0]
+            group_name = [x for x in group_names if x in annotator_name]
+            if len(group_name) > 0:
+                group_name = group_name[0]
+            else:
+                group_name = 'AMT_Turker'
+
             group_cm[group_name] += cm[video][pair]
 
     for group in group_names:

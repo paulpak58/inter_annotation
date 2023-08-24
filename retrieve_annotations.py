@@ -93,7 +93,6 @@ def create_track_groups(track_type, folder, class_names, label_type):
 
                         if (row[i_column].replace(' ', '') not in invalid_symbols and row[i_column+1].replace(' ', '') not in invalid_symbols) and 'Start' in row_name[i_column]:
                             row_label = row_name[i_column].split(' Start')[0].split(' End')[0].strip()
-                            
                             start_time = (datetime.datetime.strptime(row[i_column].replace(' ', ''), "%H:%M:%S") - datetime.datetime(1900, 1, 1)).total_seconds()
                             end_time = (datetime.datetime.strptime(row[i_column+1].replace(' ', ''), "%H:%M:%S") - datetime.datetime(1900, 1, 1)).total_seconds()
                             label = row_label
@@ -320,8 +319,8 @@ def retrieve_true_values(class_names,unique_annotators):
     Z = list(combinations(unique_annotators,2))
     true_pairs = list()
     for pair in Z:
-        if 'Resident1' in pair[0] or 'Resident1' in pair[1]:
-            true_pairs.append(pair) if 'Resident1' in pair[0] else true_pairs.append((pair[1], pair[0]))
+        if 'GroundTruth' in pair[0] or 'GroundTruth' in pair[1]:
+            true_pairs.append(pair) if 'GroundTruth' in pair[0] else true_pairs.append((pair[1], pair[0]))
 
     true_pairs.sort()
     return true_phases,true_pairs
@@ -329,28 +328,32 @@ def retrieve_true_values(class_names,unique_annotators):
 def retrieve_annotator_classifications(class_names,annotations):
     fps = 1.0
     all_keys = [key.split('_')[0] for key in annotations.keys()]
+    
     all_annotators = [key.split('_')[1] for key in annotations.keys()]
     unique_keys = [*set(all_keys)]
     unique_annotators = [*set(all_annotators)]
     true_phases, true_pairs = retrieve_true_values(class_names,unique_annotators)
+    annotators_for_video = dict()
     #### FIND maximum time stamp to define the length for each video
     max_vid_lens = dict()
     for video in unique_keys:
+        annotators_for_video[video] = list()
         max_vid_len = 0
         for annotator in unique_annotators:
             for phase in class_names['phase']:
-                if phase in annotations[video+'_'+annotator]:
-                    max_vid_len = int(max(max_vid_len,((annotations[video+'_'+annotator])[phase])['end']))
+                if video+'_'+annotator in annotations.keys():
+                    annotators_for_video[video].append(annotator)
+                    if phase in annotations[video+'_'+annotator]:
+                        max_vid_len = int(max(max_vid_len,((annotations[video+'_'+annotator])[phase])['end']))
         max_vid_lens[video] = max_vid_len+1
 
     annotations_true_phase = dict()
     for video in unique_keys:
-        for annotator in unique_annotators:
+        for annotator in annotators_for_video[video]:
             annotations_true_phase[video+'_'+annotator] = dict()
 
             for phase in class_names['phase']:
                 if phase in annotations[video+'_'+annotator]:
-
                     true_phase = phase if 'Checkpoint' in phase else (''.join(i for i in phase if not i.isdigit())).strip()
                     if true_phase not in annotations_true_phase[video+'_'+annotator].keys():
                         annotations_true_phase[video+'_'+annotator][true_phase] = dict()
@@ -373,65 +376,121 @@ def retrieve_annotator_classifications(class_names,annotations):
         for annotator_pair in true_pairs:
             first_annotator = annotator_pair[0]
             second_annotator = annotator_pair[1]
-            ann_dict_first = annotations_true_phase[video+'_'+first_annotator]
-            ann_dict_second = annotations_true_phase[video+'_'+second_annotator]
-            A[video][first_annotator+'_'+second_annotator] = dict() 
-            # for phase in class_names['phase']:
-            for phase in true_phases:
-                if phase in ann_dict_first and phase in ann_dict_second:
-                    start_first = math.floor(ann_dict_first[phase]['start'])
-                    end_first = math.floor(ann_dict_first[phase]['end'])
-                    start_second = math.floor(ann_dict_second[phase]['start'])
-                    end_second = math.floor(ann_dict_second[phase]['end'])
-
-                    MIN_START = min(start_first,start_second)
-                    MAX_END = max(end_first,end_second)
-                    phase_arr_first = np.zeros((MAX_END-MIN_START)+1)
-                    phase_arr_second = np.zeros((MAX_END-MIN_START)+1)
-
-                    for i in range(len(phase_arr_first)):
-                        if start_first<=(i+MIN_START) and end_first>=(i+MIN_START):
-                            phase_arr_first[i] = 1.
-                        if start_second<=(i+MIN_START) and end_second>=(i+MIN_START):
-                            phase_arr_second[i] = 1.
-                    # Compute IAA Score 
-                    score = jaccard_index(phase_arr_first,phase_arr_second)
-                    # score = cohen_kappa_score(phase_arr_second,phase_arr_first,num_classes=2).item()*-1
-                    
-                elif phase in ann_dict_first or phase in ann_dict_second:
-                    score = 0.0 # if phase is annotated in one annotator and not in the other
-                elif (phase not in ann_dict_first) and (phase not in ann_dict_second):
-                    score = 1.0 # if phase is not annotated in either annotator
-
-                A[video][first_annotator+'_'+second_annotator][phase] = score
-            
-            # overall cohen kappa per video 
-            phase_arr_first = np.zeros(max_vid_lens[video])
-            phase_arr_second = np.zeros(max_vid_lens[video])
-            for i in range(max_vid_lens[video]):
+            if video+'_'+first_annotator in annotations_true_phase.keys() and video+'_'+second_annotator in annotations_true_phase.keys():
+                ann_dict_first = annotations_true_phase[video+'_'+first_annotator]
+                ann_dict_second = annotations_true_phase[video+'_'+second_annotator]
+                A[video][first_annotator+'_'+second_annotator] = dict() 
+                # for phase in class_names['phase']:
                 for phase in true_phases:
-                    if phase in ann_dict_first.keys():
-                        if i > ann_dict_first[phase]['start'] and i < ann_dict_first[phase]['end']:
-                            if phase_arr_first[i] == 0:
-                                phase_arr_first[i] = true_phases.index(phase) + 1
-                            else:
-                                error_str = video + ' '+ first_annotator + ' '+ phase + ': ' + str(ann_dict_first[phase]['start']) + ':' + str(ann_dict_first[phase]['end'])
-                                if error_str not in error_list:
-                                    error_list.append(error_str)
-                    if phase in ann_dict_second.keys():
-                        if i > ann_dict_second[phase]['start'] and i < ann_dict_second[phase]['end']:
-                            if phase_arr_second[i] == 0:
-                                phase_arr_second[i] = true_phases.index(phase) + 1
-                            else:
-                                error_str = video + ' '+ second_annotator + ' ' + phase + ': ' + str(ann_dict_second[phase]['start']) + ':' + str(ann_dict_second[phase]['end'])
-                                if error_str not in error_list:
-                                    error_list.append(error_str)
-            score = cohen_kappa(phase_arr_first,phase_arr_second)
-            if video not in cm.keys():
-                cm[video] = dict()
-            cm[video][annotator_pair] = confusion_matrix(phase_arr_first,phase_arr_second, len(true_phases)+1)
-            A[video][first_annotator+'_'+second_annotator]['overall'] = score
-            # Compute IAA Score
+                    if phase in ann_dict_first and phase in ann_dict_second:
+                        start_first = math.floor(ann_dict_first[phase]['start'])
+                        end_first = math.floor(ann_dict_first[phase]['end'])
+                        start_second = math.floor(ann_dict_second[phase]['start'])
+                        end_second = math.floor(ann_dict_second[phase]['end'])
+
+
+                        MIN_START = min(start_first,start_second)
+                        MAX_END = max(end_first,end_second)
+                        phase_arr_first = np.zeros((MAX_END-MIN_START)+1)
+                        phase_arr_second = np.zeros((MAX_END-MIN_START)+1)
+
+                        for i in range(len(phase_arr_first)):
+                            if start_first<=(i+MIN_START) and end_first>=(i+MIN_START):
+                                phase_arr_first[i] = 1.
+                            if start_second<=(i+MIN_START) and end_second>=(i+MIN_START):
+                                phase_arr_second[i] = 1.
+                        # Compute IAA Score 
+                        score = jaccard_index(phase_arr_first,phase_arr_second)
+                        # score = cohen_kappa_score(phase_arr_second,phase_arr_first,num_classes=2).item()*-1
+                        
+                        # print(start_first)
+                        # print(end_first)
+                        # print(start_second)
+                        # print(end_second)
+                        # print(score)
+                        # if start_first == 0 or end_first == 0 or start_second == 0 or end_second == 0:
+                        #     import ipdb; ipdb.set_trace()
+
+
+                    elif phase in ann_dict_first or phase in ann_dict_second:
+                        score = 0.0 # if phase is annotated in one annotator and not in the other
+                    elif (phase not in ann_dict_first) and (phase not in ann_dict_second):
+                        score = 1.0 # if phase is not annotated in either annotator
+
+                    A[video][first_annotator+'_'+second_annotator][phase] = score
+                
+                # # overall cohen kappa per video 
+                # phase_arr_first = np.zeros(max_vid_lens[video])
+                # phase_arr_second = np.zeros(max_vid_lens[video])
+                # for i in range(max_vid_lens[video]):
+                #     for phase in true_phases:
+                #         if phase in ann_dict_first.keys():
+                #             if i > ann_dict_first[phase]['start'] and i < ann_dict_first[phase]['end']:
+                #                 if phase_arr_first[i] == 0:
+                #                     phase_arr_first[i] = true_phases.index(phase) + 1
+                #                 else:
+                #                     error_str = video + ' '+ first_annotator + ' '+ phase + ': ' + str(ann_dict_first[phase]['start']) + ':' + str(ann_dict_first[phase]['end'])
+                #                     if error_str not in error_list:
+                #                         error_list.append(error_str)
+                #         if phase in ann_dict_second.keys():
+                #             if i > ann_dict_second[phase]['start'] and i < ann_dict_second[phase]['end']:
+                #                 if phase_arr_second[i] == 0:
+                #                     phase_arr_second[i] = true_phases.index(phase) + 1
+                #                 else:
+                #                     error_str = video + ' '+ second_annotator + ' ' + phase + ': ' + str(ann_dict_second[phase]['start']) + ':' + str(ann_dict_second[phase]['end'])
+                #                     if error_str not in error_list:
+                #                         error_list.append(error_str)
+                # score = cohen_kappa(phase_arr_first,phase_arr_second)
+
+
+                # overall cohen kappa per video 
+                phase_arr_first = np.zeros(max_vid_lens[video])
+                phase_arr_second = np.zeros(max_vid_lens[video])
+                for i in range(max_vid_lens[video]):
+                    for phase in true_phases:
+                        if phase in ann_dict_first.keys():
+                            if i > ann_dict_first[phase]['start'] and i < ann_dict_first[phase]['end']:
+                                if phase_arr_first[i] == 0:
+                                    phase_arr_first[i] = true_phases.index(phase) + 1
+                                else:
+                                    error_str = video + ' '+ first_annotator + ' '+ phase + ': ' + str(ann_dict_first[phase]['start']) + ':' + str(ann_dict_first[phase]['end'])
+                                    if error_str not in error_list:
+                                        error_list.append(error_str)
+                        for phase2 in ann_dict_second.keys():
+                            if i > ann_dict_second[phase2]['start'] and i < ann_dict_second[phase2]['end']:
+                                if phase_arr_second[i] == 0:
+                                    phase_arr_second[i] = true_phases.index(phase2) + 1
+                                elif phase_arr_second[i] != phase_arr_first[i]:
+                                    phase_arr_second[i] = true_phases.index(phase2) + 1
+                                else:
+                                    error_str = video + ' '+ second_annotator + ' ' + phase2 + ': ' + str(ann_dict_second[phase2]['start']) + ':' + str(ann_dict_second[phase2]['end'])
+                                    if error_str not in error_list:
+                                        error_list.append(error_str)
+                score = cohen_kappa(phase_arr_first,phase_arr_second)
+
+                # overall cohen kappa per video for every annotation even the annotation overlaps with other annotations 
+                # phase_arr_first = []
+                # phase_arr_second = []
+                # for phase in true_phases:
+                #     if phase in ann_dict_first.keys():
+                #         for i in range(math.floor(ann_dict_first[phase]['start']),math.floor(ann_dict_first[phase]['end'])):
+                #             phase_arr_first.append(true_phases.index(phase) + 1)
+                #             phase_t_second = 0
+                #             for phase2 in ann_dict_second.keys():
+                #                 if i > ann_dict_second[phase2]['start'] and i < ann_dict_second[phase2]['end']:
+                #                         if phase_t_second != 0:
+                #                             import ipdb; ipdb.set_trace()
+                #                         phase_t_second =  true_phases.index(phase2) + 1
+                #             phase_arr_second.append(phase_t_second)
+                # phase_arr_first = np.array(phase_arr_first)
+                # phase_arr_second = np.array(phase_arr_second)
+                # score = cohen_kappa(phase_arr_first,phase_arr_second)
+                if video not in cm.keys():
+                    cm[video] = dict()
+
+                cm[video][annotator_pair] = confusion_matrix(phase_arr_first,phase_arr_second, len(true_phases)+1)
+                A[video][first_annotator+'_'+second_annotator]['overall'] = score
+                # Compute IAA Score
 
     #### FLEISS SCORE: Compute for Medical Residents and Non-residents
     IAA = A
@@ -440,4 +499,5 @@ def retrieve_annotator_classifications(class_names,annotations):
     print('Phase may have contradictions within same annotator are:')
     for error in error_list:
         print(error)
+
     return unique_keys,true_pairs,true_phases,IAA,FLEISS_IAA, cm

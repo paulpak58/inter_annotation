@@ -55,7 +55,7 @@ def jaccard_index(y1,y2):
     y1 = y1.tolist()
     y2 = y2.tolist()
     for an1,an2 in zip(y1,y2):
-        if an1==an2:
+        if an1==an2 and an1!=0:
             count+=1
     A = count/len(y1)  # observed agreement A
     A = round(A,3)
@@ -88,7 +88,6 @@ def confusion_matrix(y1,y2, N):
     cm = np.zeros((N,N))
     for i in range(len(y1)):
         cm[int(y1[i]),int(y2[i])] += 1
-
     return cm
 
 if __name__=='__main__':
