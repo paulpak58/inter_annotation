@@ -1,14 +1,5 @@
 import numpy as np
-import torch
-from torchmetrics.classification import MulticlassCohenKappa
 
-def cohen_kappa_score(y1,y2,num_classes):
-    target = torch.tensor(y1)
-    preds = torch.tensor(y2)
-    cohenkappa = MulticlassCohenKappa(num_classes=num_classes)
-    score = cohenkappa(target,preds)
-    # score = sklearn.metrics.cohen_kappa_score(y1,y2,labels=num_classes)
-    return score
 
 def cohen_kappa(y1,y2):
     '''

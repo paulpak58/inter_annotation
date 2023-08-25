@@ -12,7 +12,7 @@ import sages_pb2
 from sages_pb2 import *
 import multidict
 import google.protobuf.timestamp_pb2
-from inter_annotate import cohen_kappa_score, cohen_kappa, jaccard_index, confusion_matrix
+from inter_annotate import cohen_kappa, jaccard_index, confusion_matrix
 from itertools import combinations,permutations
 
 def seconds_to_timestamp(seconds):
