@@ -302,7 +302,7 @@ def write_files(annotation_set_dicts,params):
             fp.write(annotation_set.SerializeToString())
             fp.close()
 
-def retrieve_true_values(class_names,unique_annotators):
+def retrieve_true_values(class_names,unique_annotators,gt_name='GroundTruth'):
     #### Merge phase segments belonging to the same phase into one; In other words, we remove all digits from phase titles except if
     #### the phase is a Checkpoint
     true_phases = list()
@@ -319,14 +319,15 @@ def retrieve_true_values(class_names,unique_annotators):
     Z = list(combinations(unique_annotators,2))
     true_pairs = list()
     for pair in Z:
-        if 'GroundTruth' in pair[0] or 'GroundTruth' in pair[1]:
-            true_pairs.append(pair) if 'GroundTruth' in pair[0] else true_pairs.append((pair[1], pair[0]))
+        if gt_name in pair[0] or gt_name in pair[1]:
+            true_pairs.append(pair) if gt_name in pair[0] else true_pairs.append((pair[1], pair[0]))
 
     true_pairs.sort()
     return true_phases,true_pairs
 
 def retrieve_annotator_classifications(class_names,annotations):
-    fps = 1.0
+    #### Computes the Jaccard similarity between two sets of annotations
+    #### Computes the Multiclass Cohen's Kappa score over all annotators
     all_keys = [key.split('_')[0] for key in annotations.keys()]
     
     all_annotators = [key.split('_')[1] for key in annotations.keys()]
@@ -347,11 +348,11 @@ def retrieve_annotator_classifications(class_names,annotations):
                         max_vid_len = int(max(max_vid_len,((annotations[video+'_'+annotator])[phase])['end']))
         max_vid_lens[video] = max_vid_len+1
 
+    # Construct our data structure of annotations
     annotations_true_phase = dict()
     for video in unique_keys:
         for annotator in annotators_for_video[video]:
             annotations_true_phase[video+'_'+annotator] = dict()
-
             for phase in class_names['phase']:
                 if phase in annotations[video+'_'+annotator]:
                     true_phase = phase if 'Checkpoint' in phase else (''.join(i for i in phase if not i.isdigit())).strip()
@@ -365,8 +366,6 @@ def retrieve_annotator_classifications(class_names,annotations):
                         
                         annotations_true_phase[video+'_'+annotator][true_phase]['start'] = min(annotations[video+'_'+annotator][phase]['start'],prev_start)
                         annotations_true_phase[video+'_'+annotator][true_phase]['end'] = max(annotations[video+'_'+annotator][phase]['end'],prev_end)
-
-
     
     A = dict()
     error_list = list()
@@ -492,9 +491,8 @@ def retrieve_annotator_classifications(class_names,annotations):
                 A[video][first_annotator+'_'+second_annotator]['overall'] = score
                 # Compute IAA Score
 
-    #### FLEISS SCORE: Compute for Medical Residents and Non-residents
+    #### (Not Implemented) FLEISS SCORE: Compute for Medical Residents and Non-residents
     IAA = A
-
     FLEISS_IAA = dict()
     print('Phase may have contradictions within same annotator are:')
     for error in error_list:

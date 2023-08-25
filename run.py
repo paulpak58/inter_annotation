@@ -3,7 +3,6 @@ import csv
 import numpy as np
 import argparse
 from itertools import combinations
-from inter_annotate import cohen_kappa_score,cohen_kappa,fleiss_kappa
 from retrieve_annotations import load_class_names,create_track_groups,write_files,load_protobuf_dir,retrieve_annotator_classifications
 from visualization import plot_confusion_matrix
 def parse_args(): 

@@ -1,0 +1,180 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<!-- <crowd-form answer-format="flatten-objects"> -->
+<crowd-form answer-format="flatten-objects">
+
+    <!-- The crowd-classifier element will create a tool for the Worker to select the
+           correct answer to your question -->
+
+
+    <!--       categories="['Port Placement','Fundus Retraction','Release Gallbladder Peritoneum','Dissection of Calot’s triangle',
+                   'Critical View of Safety','Checkpoint 1','Clipping of Cystic Duct','Clipping of Cystic Artery','Division of Cystic Artery',
+                   'DivisionofCysticDuct','Checkpoint 2','Removal of Gallbladder from Liverbed','Bagging of Gallbladder','Other']" -->
+    <crowd-classifier 
+      name="category"
+      categories="['1=Very Easy','2=Easy','3=Medium','4=Hard','5=Very Hard']"
+      header="How difficult was the annotation of this video? (1=easy, 5=hard). Please make sure you familiarize yourself with the Annotation Protocol before annotating the start and endpoints of surgical phases in laparoscopic Cholecystectomy."
+    >
+    
+
+      <classification-target>
+         <video width="100%" height="315" controls>
+
+          <!-- Your video file URLs will be substituted for the "video_url" attribute below when 
+                 you publish a batch with a CSV input file containing multiple video file URLs -->
+          <source src="${video_url}" type="video/mp4"></iframe>
+
+        </video> 
+      </classification-target>
+      
+    
+     <!-- Use the short-instructions section for quick instructions that the Worker
+            will see while working on the task. Including some basic examples of 
+            good and bad answers here can help get good results. You can include 
+            any HTML here. -->
+      <short-instructions>
+        <p>Please review the annotation protocol (pdf document) for the definitions of the start and endpoints of surgical phases in laparoscopic Cholecystectomy. </p>
+        <p>Watch the video and note the individual times for start/endpoints of each phase in the format HH:MM:SS. </p>
+        <p>Some phases may have multiple occurances or be interrupted, and therefore require the annotaiton of multiple start and endpoints.</p>
+      </short-instructions>
+
+
+      <!-- Use the full-instructions section for more detailed instructions that the 
+            Worker can open while working on the task. Including more detailed 
+            instructions and additional examples of good and bad answers here can
+            help get good results. You can include any HTML here. -->
+      <full-instructions header="Video Classification Instructions">
+        <p>Please review the annotation protocol (pdf document) for the definitions of the start and endpoints of surgical phases in laparoscopic Cholecystectomy.</p>
+        <p>Watch the video and note the individual times for start/endpoints of each phase in the format HH:MM:SS.</p>
+        <p>Some phases may have multiple occurances or be interrupted, and therefore require the annotaiton of multiple start and endpoints.</p>
+      </full-instructions>
+      
+    </crowd-classifier>
+
+
+  <head>
+      <meta charset="UTF-8">
+      <title>Laparoscopic Cholecystectomy Phase Classification</title>
+      <style>
+        .paragraph-wrapper {
+            width: 100%;
+            display: flex;
+        }
+        p {
+            display: inline-block;
+            width: 50%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 0;
+        }
+        h3 { 
+            margin-bottom: 0;
+        }
+      </style>
+  </head>
+
+  <body>
+    <h1>Phase Annotation</h1>
+    <h2>Task Description</h2>
+    <div>
+        <p style="width:100%;">Watch the video above and fill out the times of start and endpoint (Format HH:MM:SS) for each surgical phase in the observed laparoscopic cholecystectomy video. 
+        Some phases occur more than once (e.g. Port Placement) or are interrupted by altervative actions (e.g. Dissection of Gallbladder Peritoneum interrupted by longer pause in dissection).
+        In that case, please annotate a separate start and endpoint for each occurance / segment of the phase. 
+        You are required to annotate <b>at least one</b> start and endpoint (Format HH:MM:SS) for each phase. If that phase does not at all occur in the video, please annotate as 00:00:00.
+        Your annotation performance will be evaluated according to the inter-rater agreement with clinical annotation experts. Inadequately filled out forms will not be accepted.
+        Please review the <a href="https://mghvideos.s3.us-east-2.amazonaws.com/Annotation+Protocol+AmTurk.pdf" target="_blank">annotation protocol</a> regularly throughout the annotation process.
+        In case of questions or concern please contact: <a href="mailto:surgicalannotation@gmail.com">surgicalannotation@gmail.com</a>.
+        </p>
+    </div>
+
+    <h3>Port Placement</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Port Placement 1 Start time" label="Start 1 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Port Placement 1 End time" label="End 1 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Port Placement 2 Start time" label="Start 2 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Port Placement 2 End time" label="End 2 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Port Placement 3 Start time" label="Start 3 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Port Placement 3 End time" label="End 3 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+    </div>
+    <h3>Fundus Retraction</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Fundus Retraction Start time" label="Start (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Fundus Retraction End time" label="End (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+    </div>
+    <h3>Release of Gallbladder Peritoneum</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Release of Gallbladder Peritoneum 1 Start time" label="Start 1 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Release of Gallbladder Peritoneum 1 End time" label="End 1 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Release of Gallbladder Peritoneum 2 Start time" label="Start 2 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Release of Gallbladder Peritoneum 2 End time" label="End 2 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Release of Gallbladder Peritoneum 3 Start time" label="Start 3 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Release of Gallbladder Peritoneum 3 End time" label="End 3 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+    </div>
+    <h3>Dissection of Calot's Triangle</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Dissection of Calot's Triangle 1 Start time" label="Start 1 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Dissection of Calot's Triangle 1 End time" label="End 1 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Dissection of Calot's Triangle 2 Start time" label="Start 2 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Dissection of Calot's Triangle 2 End time" label="End 2 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Dissection of Calot's Triangle 3 Start time" label="Start 3 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Dissection of Calot's Triangle 3 End time" label="End 3 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+    </div>
+    <h3>CVS</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="CVS Start time" label="Start (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+    </div>
+    <h3>Checkpoint 1</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Checkpoint 1 Start time" label="Start (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Checkpoint 1 End time" label="End (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+    </div>
+    <h3>Clipping Cystic Duct</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Clipping Cystic Duct Start time" label="Start (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Clipping Cystic Duct End time" label="End (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+    </div>
+    <h3>Clipping Cystic Artery</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Clipping Cystic Artery Start time" label="Start (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Clipping Cystic Artery End time" label="End (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+    </div>
+    <h3>Division Cystic Artery</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Division Cystic Artery Start time" label="Start (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Division Cystic Artery End time" label="End (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+    </div>
+    <h3>Division Cystic Duct</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Division Cystic Duct Start time" label="Start (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Division Cystic Duct End time" label="End (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+    </div>
+    <h3>Checkpoint 2</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Checkpoint 2 Start time" label="Start (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Checkpoint 2 End time" label="End (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+    </div>
+    <h3>Removal of Gallbladder from Liver Bed</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Removal of Gallbladder from Liver Bed 1 Start time" label="Start 1 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Removal of Gallbladder from Liver Bed 1 End time" label="End 1 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Removal of Gallbladder from Liver Bed 2 Start time" label="Start 2 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Removal of Gallbladder from Liver Bed 2 End time" label="End 2 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Removal of Gallbladder from Liver Bed 3 Start time" label="Start 3 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+        <p><crowd-input name="Removal of Gallbladder from Liver Bed 3 End time" label="End 3 (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate></crowd-input></p>
+    </div>
+    <h3>Bagging of Gallbladder</h3>
+    <div class="paragraph-wrapper">
+        <p><crowd-input name="Bagging of Gallbladder Start time" label="Start (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+        <p><crowd-input name="Bagging of Gallbladder End time" label="End (HH:MM:SS)" pattern="^([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$" min-length=8 max-length=8 error-message="Input not in HH:MM:SS" auto-validate required></crowd-input></p>
+    </div>
+    <div style="text-align: center;">
+        <p><b>Scroll up and press the Submit button once finished.</b></p>
+    </div>
+    
+  </body>
+</crowd-form>

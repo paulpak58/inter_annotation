@@ -1,10 +1,6 @@
 import numpy as np
-import sklearn
-# from sklearn.metrics import cohen_kappa_score
 import torch
-import torchmetrics
 from torchmetrics.classification import MulticlassCohenKappa
-import ipdb;
 
 def cohen_kappa_score(y1,y2,num_classes):
     target = torch.tensor(y1)
@@ -96,28 +92,3 @@ if __name__=='__main__':
     # score1 = cohen_kappa(target,preds)
     score1 = jaccard_index(target,preds)
     print(score1)
-   
-    an1 = np.array([2,1,0,0])
-    an2 = np.array([2,1,0,1])
-    an3 = np.array([2,1,0,1])
-    an4 = np.array([1,1,0,1])
-    print(np.shape(np.concatenate((an1,an2,an3,an4))))
-
-    '''
-    target = torch.tensor([2,1,0,0])
-    preds = torch.tensor([2,1,0,1])
-    cohenkappa = MulticlassCohenKappa(num_classes=3)
-    score = 0
-    count = 0
-    for i in range(len(target)):
-        score += cohen_kappa([target[i]],[preds[i]])
-        count += 1
-    score /= count
-    print(score)
-
-    print(cohenkappa(preds,target))
-    target = torch.tensor([2,1,0,0])
-    preds = torch.tensor([2,1,0,1])
-    cohenkappa = cohen_kappa_score(target,preds)
-    print(round(cohenkappa,4))
-    '''
