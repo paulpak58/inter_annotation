@@ -84,8 +84,8 @@ if __name__ == "__main__":
         writer.writerows(rows)
 
     group_cm = dict()
-    # group_names = ['Resident', 'Layperson']
-    group_names = ['AMT_Turker']
+    group_names = ['Resident', 'Layperson', 'AMT']
+    # group_names = ['AMT_Turker']
     for group in group_names:
         group_cm[group] = np.zeros((len(true_phases[:-1]) + 1,len(true_phases[:-1]) + 1))
 
