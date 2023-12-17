@@ -5,7 +5,7 @@ client = boto3.client('mturk',
      aws_access_key_id='AKIAXLGRKM3Q7C452FOS',
      aws_secret_access_key='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',
     region_name='us-east-1')
-s3_url = "https://mghvideos.s3.us-east-2.amazonaws.com/Annotation+Protocol+AmTurk.pdf"
+s3_url = ""
 
 test_question = '''
 <QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd">
@@ -19,8 +19,8 @@ test_question = '''
     <IsRequired>true</IsRequired>
     <QuestionContent>
     <Text>Please confirm that you have read the contents of the Annotation Protocol and the IRB Agreement by selecting "Yes".</Text>
-    <FormattedContent><![CDATA[<a href="https://mghvideos.s3.us-east-2.amazonaws.com/Annotation+Protocol+AmTurk.pdf">Annotation Protocol Guidelines</a>]]></FormattedContent>
-    <FormattedContent><![CDATA[<a href="https://mghvideos.s3.us-east-2.amazonaws.com/VerbalConsent_AMTurk.pdf">IRB Agreement</a>]]></FormattedContent>
+    <FormattedContent><![CDATA[<a href="">Annotation Protocol Guidelines</a>]]></FormattedContent>
+    <FormattedContent><![CDATA[<a href="">IRB Agreement</a>]]></FormattedContent>
     </QuestionContent>
     <AnswerSpecification>
     <SelectionAnswer>
