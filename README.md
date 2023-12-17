@@ -1,5 +1,5 @@
 # Inter-Annotator Agreement for Surgical Annotations
-Each surgical video is annotated by different annotators. We first load this information from an input spreadsheet and then calculate the inter-annotator agreement per frame. The Jaccard Index is computed between each pair of annotators, and the Multi-class Cohen Kappa Score is computed for the overall video.
+A project to measure the inter-annotator agreement for surgical videos. Each surgical video is annotated by different annotators. We first load this information from an input spreadsheet and then calculate the inter-annotator agreement per frame. The Jaccard Index is computed between each pair of annotators, and the Multi-class Cohen Kappa Score is computed for the overall video. For confidentiality, the data & output files have been removed.
 
 ## Setup
 > conda env create -n inter_annotator --file inter_annotator.yml
