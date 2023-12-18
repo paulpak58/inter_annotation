@@ -2,9 +2,9 @@ import boto3
 import xml.etree.ElementTree as ET
 
 client = boto3.client('mturk',
-     aws_access_key_id='AKIAXLGRKM3Q7C452FOS',
-     aws_secret_access_key='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',
-    region_name='us-east-1')
+     aws_access_key_id='',
+     aws_secret_access_key='',
+     region_name='')
 s3_url = ""
 
 test_question = '''
